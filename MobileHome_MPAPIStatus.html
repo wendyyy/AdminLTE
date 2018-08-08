@@ -65,6 +65,17 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-dashboard"></i> <span>Mobile Dashboard</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="index.html"><i class="fa fa-circle-o"></i> Mobile Home</a></li>
+          </ul>
+        </li>
         <li class="active treeview">
           <a href="#">
             <i class="fa fa-dashboard"></i> <span>MP Dashboard</span>
@@ -73,11 +84,36 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="index.html"><i class="fa fa-circle-o"></i> MP Home</a></li>
-            <li><a href="MobileHome_MPHeartbeat.html"><i class="fa fa-circle-o"></i> MP Heartbeat Status</a></li>
+            <li><a href="MobileHome_MPHeartbeat.html"><i class="fa fa-circle-o"></i> MP Heartbeat Calendar</a></li>
             <li class="active"><a href="MobileHome_MPAPIStatus.html"><i class="fa fa-circle-o"></i> MP API Status</a></li>
-            <li><a href="MobileHome_MPPDStatus.html"><i class="fa fa-circle-o"></i> MP PD Status</a></li>
             <li><a href="MobileHome_MPAutoJob.html"><i class="fa fa-circle-o"></i> MP Automation Job</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-dashboard"></i> <span>Client Dashboard</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="#"><i class="fa fa-circle-o"></i> iOS Sanity Status</a></li>
+            <li><a href="#"><i class="fa fa-circle-o"></i> iOS SanityStatus</a></li>
+            <li><a href="#"><i class="fa fa-circle-o"></i> Automation Job</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-dashboard"></i> <span>Regression Dashboard</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="#"><i class="fa fa-circle-o"></i> Regression Home Status</a></li>
+            <li><a href="#"><i class="fa fa-circle-o"></i> iOS Regression Status</a></li>
+            <li><a href="#"><i class="fa fa-circle-o"></i> Android Regression Status</a></li>
+            <li><a href="MobileHome_MPPDStatus.html"><i class="fa fa-circle-o"></i> MP Post Deployment Status</a></li>
           </ul>
         </li>
       </ul>
@@ -117,11 +153,11 @@
                 <div class="row">
                   <div class="col-xs-6 col-md-6 text-center">
                     <div id="donut-chart-preview-overall" style="height: 300px;"></div>
-                    <div class="knob-label">qapatchpreview</div>
+                    <div id="donut-chart-preview-overall-failures" class="small-box-footerl">qapatchpreview</div>
                   </div>
                   <div class="col-xs-6 col-md-6 text-center">
                     <div id="donut-chart-qacand-overall" style="height: 300px;"></div>
-                    <div class="knob-label">qacand</div>
+                    <div id="donut-chart-qacand-overall-failures" class="small-box-footerl">qacand</div>
                   </div>
                 </div>
               </div>
@@ -216,12 +252,15 @@
                 <div class="box-body no-padding">
                   <table id="table_preview" class="table table-condensed">
                     <tr>
-                      <th>Team</th>
-                      <th>Feature</th>
-                      <th style="width: 300px">Pass Rate</th>
-                      <th style="width: 40px">Label</th>
-                      <th style="width: 40px">F/Total</th>
-                      <th style="width: 40px">Details</th>
+                      <th style="width: 60px">Team</th>
+                      <th style="width: 60px">Feature</th>
+                      <th style="width: 100px">Pass Rate</th>
+                      <th style="width: 30px"></th>
+                      <th style="width: 30px">Fail/Total</th>
+                      <th style="width: 30px">ExecutionAt</th>
+                      <th style="width: 250px">Comment</th>
+                      <th style="width: 30px"></th>
+                      <th style="width: 30px">Go To Details</th>
                     </tr>
                   </table>
                 </div>
@@ -237,12 +276,16 @@
                 <div class="box-body no-padding">
                   <table id="table_qacand" class="table table-condensed">
                     <tr>
-                      <th>Team</th>
-                      <th>Feature</th>
-                      <th style="width: 300px">Pass Rate</th>
-                      <th style="width: 40px">Label</th>
-                      <th style="width: 40px">F/Total</th>
-                      <th style="width: 40px">Details</th>
+                      <th style="width: 60px">Team</th>
+                      <th style="width: 60px">Feature</th>
+                      <th style="width: 100px">Pass Rate</th>
+                      <th style="width: 30px"></th>
+                      <th style="width: 30px">Fail/Total</th>
+                      <th style="width: 30px">ExecutionAt</th>
+                      <th style="width: 250px">Comment</th>
+                      <th style="width: 30px"></th>
+                      <th style="width: 30px">Go To Details</th>
+                    </tr>
                     </tr>
                   </table>
                 </div>
@@ -520,21 +563,33 @@ function loadData1() {
       var count = 0;
       var teamFailMap = new Map();
       var ownerFailMap = new Map();
+      var featureFailMap = new Map();
+      var mpBranchInfoList = "";
       data.forEach(function (file, i) {
           $.getJSON(file,function(fdata){
-              var lens = fdata.job_name.length-"MPAPI-Feature-Test-".length-"-qapatchpreview".length;
-              var featureName = fdata.job_name.substr("MPAPI-Feature-Test-".length,lens)
-              var passrate = fdata.pass_rate.substr(0,fdata.pass_rate.length-1)
+              var jobname = fdata.job_name;
+              var lens = jobname.length-"MPAPI-Feature-Test-".length-"-qapatchpreview".length;
+              var featureName = jobname.substr("MPAPI-Feature-Test-".length,lens);
+              var passrate = fdata.pass_rate.substr(0,fdata.pass_rate.length-1);
               var team = fdata.team;
               var owner = fdata.owner;
+              var comment = fdata.hasOwnProperty("comment")?fdata.comment:"";
+              var executionAt = fdata.execution_start_time;
+              var saveCommentId = 'id_'+jobname+'_input';
+              var jobUniqueId = fdata.job_run_unique_id;
+              var branchInfo = (fdata.client_build_branch === "")?"":(fdata.client_build_branch + " " + fdata.client_build_version);
               html = '<tr>'+
-                  '<td>'+team+'</td>'+
-                  '<td>'+featureName+'</td>'+
-                  '<td><div class="progress progress-xs"><div class="progress-bar progress-bar-success" style="width: '+passrate+'%"></div></div></td>'+
-                  '<td><span class="badge bg-'+(passrate==100?"green":(passrate>90?"yellow":"red"))+'">'+passrate+'%</td>'+
-                  '<td>'+(parseInt(fdata.fail_case_count)+parseInt(fdata.skip_case_count))+'/'+(parseInt(fdata.fail_case_count)+parseInt(fdata.skip_case_count)+parseInt(fdata.pass_case_count))+'</td>'+
-                  '<td><a href="'+file+'" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i></a></td>' +
-                  '</tr>';
+                    '<td>'+team+'</td>'+
+                    '<td>'+featureName+'</td>'+
+                    '<td><div class="progress progress-xs"><div class="progress-bar progress-bar-success" style="width: '+passrate+'%"></div></div></td>'+
+                    '<td><span class="badge bg-'+(passrate==100?"green":(passrate>90?"yellow":"red"))+'">'+passrate+'%</td>'+
+                    '<td>'+(parseInt(fdata.fail_case_count)+parseInt(fdata.skip_case_count))+'/'+(parseInt(fdata.fail_case_count)+parseInt(fdata.skip_case_count)+parseInt(fdata.pass_case_count))+'</td>'+
+                    '<td>' + executionAt + '</td>' +
+                    '<td><input id="'+saveCommentId+'" type="text" value="'+comment+'" class="form-control"></td>'+
+                  '<td><input id="'+(saveCommentId+'_button')+'" type="button" value="save" onclick="saveComment(\''+file+'\',\''+saveCommentId+'\',\''+jobUniqueId+'\',\'comment\')"></td>' +
+                    '<td><a href="MobileHome_TestDetails.html?detailpath='+file+'" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i></a></td>' +
+                    '</tr>';
+
 
               $('#table_preview').append(html);
               count += 1;
@@ -558,6 +613,11 @@ function loadData1() {
               if(parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count) > 0) {
                   ownerFcount = ownerFcount + parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count);
                   ownerFailMap.set(owner, ownerFcount);
+                  featureFailMap.set(featureName,parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count));
+              }
+              //branch info
+              if (branchInfo!=null && branchInfo !== "" && !mpBranchInfoList.includes(branchInfo)) {
+                  mpBranchInfoList = (mpBranchInfoList === "")?branchInfo: (mpBranchInfoList+","+branchInfo);
               }
 
               if(count == data.length) {
@@ -568,8 +628,8 @@ function loadData1() {
 
                   var donutData = [
                       { label: 'Pass', data: totalpass, color: '#00a65a' },
-                      { label: 'Fail', data: totalfail, color: '#f56954' },
-                      { label: 'skip', data: totalskip, color: '#f39c12' }
+                      { label: 'Fail', data: (totalfail+totalskip), color: '#f56954' }
+                      // { label: 'skip', data: totalskip, color: '#f39c12' }
                   ]
                   $.plot('#donut-chart-preview-overall', donutData, {
                       series: {
@@ -629,6 +689,18 @@ function loadData1() {
                           // + Math.round(series.percent) + '%</div>'
                           + series.percent.toFixed(2) + '%</div>'
                   }
+                  /*
+                        * get failures by feature
+                        */
+                  var featureFailure = "<div><b>Failures</b>: ";
+                  featureFailMap.forEach(function(value ,key ,featureFailMap) {
+                      featureFailure = featureFailure.indexOf(")")>0?featureFailure + "," + key + "("+value+")":featureFailure + key + "("+value+")" ;
+
+                  });
+                  featureFailure = featureFailure + "</div>";
+                  $('#donut-chart-preview-overall-failures').append(featureFailure);
+                  var mpBranchInfoString = "<div><b>Branch_Commit</b>: " + mpBranchInfoList + "</div>";
+                  $('#donut-chart-preview-overall-failures').append(mpBranchInfoString);
               }
           });
       });
@@ -647,20 +719,31 @@ function loadData2() {
         var count = 0;
         var teamFailMap = new Map();
         var ownerFailMap = new Map();
+        var featureFailMap = new Map();
+        var mpBranchInfoList = "";
         data.forEach(function (file, i) {
             $.getJSON(file,function(fdata){
-                var lens = fdata.job_name.length-"MPAPI-Feature-Test-".length-"-qacand".length;
-                var featureName = fdata.job_name.substr("MPAPI-Feature-Test-".length,lens);
+                var jobname = fdata.job_name;
+                var lens = jobname.length-"MPAPI-Feature-Test-".length-"-qacand".length;
+                var featureName = jobname.substr("MPAPI-Feature-Test-".length,lens);
                 var passrate = fdata.pass_rate.substr(0,fdata.pass_rate.length-1);
                 var team = fdata.team;
                 var owner = fdata.owner;
+                var comment = fdata.hasOwnProperty("comment")?fdata.comment:"";
+                var executionAt = fdata.execution_start_time;
+                var saveCommentId = 'id_'+jobname+'_input';
+                var jobUniqueId = fdata.job_run_unique_id;
+                var branchInfo = (fdata.client_build_branch === "")?"":(fdata.client_build_branch + " " + fdata.client_build_version);
                 html = '<tr>'+
                     '<td>'+team+'</td>'+
                     '<td>'+featureName+'</td>'+
                     '<td><div class="progress progress-xs"><div class="progress-bar progress-bar-success" style="width: '+passrate+'%"></div></div></td>'+
                     '<td><span class="badge bg-'+(passrate==100?"green":(passrate>90?"yellow":"red"))+'">'+passrate+'%</td>'+
                     '<td>'+(parseInt(fdata.fail_case_count)+parseInt(fdata.skip_case_count))+'/'+(parseInt(fdata.fail_case_count)+parseInt(fdata.skip_case_count)+parseInt(fdata.pass_case_count))+'</td>'+
-                    '<td><a href="'+file+'" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i></a></td>' +
+                    '<td>' + executionAt + '</td>' +
+                    '<td><input id="'+saveCommentId+'" type="text" value="'+comment+'" class="form-control"></td>'+
+                    '<td><input id="'+(saveCommentId+'_button')+'" type="button" value="save" onclick="saveComment(\''+file+'\',\''+saveCommentId+'\',\''+jobUniqueId+'\',\'comment\')"></td>' +
+                    '<td><a href="MobileHome_TestDetails.html?detailpath='+file+'" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i></a></td>' +
                     '</tr>';
 
                 $('#table_qacand').append(html);
@@ -685,6 +768,11 @@ function loadData2() {
                 if(parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count) > 0) {
                     ownerFcount = ownerFcount + parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count);
                     ownerFailMap.set(owner, ownerFcount);
+                    featureFailMap.set(featureName,parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count));
+                }
+                //branch info
+                if (branchInfo!=null && branchInfo !== "" && !mpBranchInfoList.includes(branchInfo)) {
+                    mpBranchInfoList = (mpBranchInfoList === "")?branchInfo: (mpBranchInfoList+","+branchInfo);
                 }
 
                 if(count == data.length) {
@@ -695,8 +783,8 @@ function loadData2() {
 
                     var donutData = [
                         { label: 'Pass', data: totalpass, color: '#00a65a' },
-                        { label: 'Fail', data: totalfail, color: '#f56954' },
-                        { label: 'skip', data: totalskip, color: '#f39c12' }
+                        { label: 'Fail', data: (totalfail+totalskip), color: '#f56954' }
+                        // { label: 'skip', data: totalskip, color: '#f39c12' }
                     ]
                     $.plot('#donut-chart-qacand-overall', donutData, {
                         series: {
@@ -744,6 +832,7 @@ function loadData2() {
                         $('#donut-chart-qacand-byowner').append(html);
                     });
 
+
                     /*
                      * Custom Label formatter
                      * ----------------------
@@ -754,6 +843,18 @@ function loadData2() {
                             + '<br>'
                             + series.percent.toFixed(2) + '%</div>'
                     }
+                    /*
+                       * get failures by feature
+                       */
+                    var featureFailure = "<div><b>Failures</b>: ";
+                    featureFailMap.forEach(function(value ,key ,featureFailMap) {
+                        featureFailure = featureFailure.indexOf(")")>0?featureFailure + "," + key + "("+value+")":featureFailure + key + "("+value+")" ;
+
+                    });
+                    featureFailure = featureFailure + "</div>";
+                    $('#donut-chart-qacand-overall-failures').append(featureFailure);
+                    var mpBranchInfoString = "<div><b>Branch_Commit</b>: " + mpBranchInfoList + "</div>";
+                    $('#donut-chart-qacand-overall-failures').append(mpBranchInfoString);
                 }
 
             });
@@ -767,7 +868,51 @@ function loadData() {
     loadData2();
 
 }
+//save comment to Json - not done
+function saveComment(file,id,jobId,commentOrDetails) {
+    var content = $("#"+id).val();
+    var testId = "";
+    if( commentOrDetails === 'details') {
+        testId = id.replace("id_", "");
+        testId = testId.replace("_input","");
+    }
 
+    content = (content.length > 0)?content:"null";
+    content = encodeURIComponent(content);
+
+    var host = window.location.host;
+
+    if(commentOrDetails === 'comment') {
+        queryString = "comment="+content;
+
+    } else if (commentOrDetails === 'details') {
+        queryString = "updateTestDetails="+content + "&" + "testId=" + testId;
+    }
+
+    // alert("host is: "+host);
+    theUrl = "http://"+host+file+"?" + queryString;
+    // alert("Will call "+theUrl);
+    // alert("Will update [comment: "+content+"] to "+file);
+    callHttpRequest(theUrl);
+
+    if (file.includes("_latest")) {
+        //////also update orginal file
+        file = file.replace("_latest", ("_" + jobId));
+        theUrl = "http://" + host + file + "?" + queryString;
+        // alert("Will call " + theUrl);
+        // alert("Will update [comment: "+content+"] to "+file);
+        callHttpRequest(theUrl);
+    }
+
+}
+
+function callHttpRequest(theUrl) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    // alert(" "+theUrl);
+    xmlHttp.send( null );
+    window.location.reload(true);
+}
 $(document).ready(loadData());
 </script>
 </body>

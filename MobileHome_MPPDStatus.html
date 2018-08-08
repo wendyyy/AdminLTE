@@ -76,7 +76,7 @@
             <li><a href="index.html"><i class="fa fa-circle-o"></i> Mobile Home</a></li>
           </ul>
         </li>
-        <li class="active treeview">
+        <li class="treeview">
           <a href="#">
             <i class="fa fa-dashboard"></i> <span>MP Dashboard</span>
             <span class="pull-right-container">
@@ -86,7 +86,7 @@
           <ul class="treeview-menu">
             <li><a href="MobileHome_MPHeartbeat.html"><i class="fa fa-circle-o"></i> MP Heartbeat Calendar</a></li>
             <li><a href="MobileHome_MPAPIStatus.html"><i class="fa fa-circle-o"></i> MP API Status</a></li>
-            <li class="active"><a href="MobileHome_MPAutoJob.html"><i class="fa fa-circle-o"></i> MP Automation Job</a></li>
+            <li><a href="MobileHome_MPAutoJob.html"><i class="fa fa-circle-o"></i> MP Automation Job</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -102,7 +102,7 @@
             <li><a href="#"><i class="fa fa-circle-o"></i> Automation Job</a></li>
           </ul>
         </li>
-        <li class="treeview">
+        <li class="active treeview">
           <a href="#">
             <i class="fa fa-dashboard"></i> <span>Regression Dashboard</span>
             <span class="pull-right-container">
@@ -113,7 +113,7 @@
             <li><a href="#"><i class="fa fa-circle-o"></i> Regression Home Status</a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> iOS Regression Status</a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> Android Regression Status</a></li>
-            <li><a href="MobileHome_MPPDStatus.html"><i class="fa fa-circle-o"></i> MP Post Deployment Status</a></li>
+            <li class="active"><a href="MobileHome_MPPDStatus.html"><i class="fa fa-circle-o"></i> MP Post Deployment Status</a></li>
           </ul>
         </li>
       </ul>
@@ -126,7 +126,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        MP Jenkins Job
+        MP PD Status
         <small>Dashboard</small>
       </h1>
       <!--ol class="breadcrumb">
@@ -137,161 +137,43 @@
 
     <!-- Main content -->
     <section class="content">
+      <!-- Small boxes (Stat box) -->
+      <!-- /.row -->
+
+      <!-- Main row -->
       <div class="row">
-        <div class="col-xs-12">
+        <div class="col-md-6">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Auto Trigger Jobs</h3>
+              <h3 class="box-title">Production DCs</h3>
             </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <table id="example1" class="table table-bordered table-hover">
-                <thead>
-                <tr>
-                  <th>Job Name</th>
-                  <th>View Job</th>
-                  <th>Launch</th>
-                  <th>Comment</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>QAPATCHPREVIEW_Daily_API_Auto_Test</td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPDeploymentTrackOnPreviewSAPpium/" class="small-box-footer">view job</a>
-                  </td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPDeploymentTrackOnPreviewSAPpium/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a>
-                  </td>
-                  <td>Auto trigger at about 7:07 AM SH time</td>
-                </tr>
-                <tr>
-                  <td>QACAND_Daily_API_Auto_Test</td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPDeploymentTrackOnCandSAPpium/" class="small-box-footer">view job</a>
-                  </td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPDeploymentTrackOnCandSAPpium/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a>
-                  </td>
-                  <td>Auto trigger at about 6:48 AM SH time</td>
-                </tr>
-                <tr>
-                  <td>MP heartbeat monitor</td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPServerHeartbeatAndInfoCheck/" class="small-box-footer">view job</a>
-                  </td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPServerHeartbeatAndInfoCheck/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a>
-                  </td>
-                  <td>Auto trigger every 30 min</td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
+            <div class="margin">
+              <!-- select -->
+              <div class="form-group">
+                <label>Choose a release version</label>
+                <select id="id_versions" class="form-control" onchange="loadData1()">
+                  <option>release1808</option>
+                  <option>bizx1808Preview</option>
+                  <option>release1809</option>
+                  <option>bizx1808Production</option>
+                  <option>release1810</option>
+                  <option>release1811</option>
+                  <option>release1812</option>
+                  <option>debug</option>
 
-          <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">Customize Your Job</h3>
+                </select>
+              </div>
             </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <table id="example1" class="table table-bordered table-hover">
-                <thead>
-                <tr>
-                  <th>Job Name</th>
-                  <th>View Job</th>
-                  <th>Launch</th>
-                  <th>Comment</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>Filter API auto cases by TestLinkId</td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Customize-TestLinkId/" class="small-box-footer">view job</a>
-                  </td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Customize-TestLinkId/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a>
-                  </td>
-                  <td>
-                    <li>"Node": choose a available node to run your test > </li>
-                    <li>"MailTo": write down your email address > </li>
-                    <li>"FilterValue": write down your TestLink Ids (no '-', separate with ',') > </li>
-                    <li>"Server": don't forget to select your test env (qacand or qapatchpreview) > </li>
-                    <li>click "Build" to launch the test </li>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Filter API auto cases by Feature folders</td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Customize-Features/" class="small-box-footer">view job</a>
-                  </td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Customize-Features/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a>
-                  </td>
-                  <td>
-                    <li>"Node": choose a available node to run your test > </li>
-                    <li>"Server": don't forget to select your test env (qacand or qapatchpreview) > </li>
-                    <li>"TestFeature": write down your feature folder names (separate with ',') > </li>
-                    <li>"MailTo": write down your email address > </li>
-                    <li>click "Build" to launch the test </li>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
+                <!-- /.box-header -->
+            <div id="DC_status" class="box-body no-padding">
+              <div id="DC_data"></div>
             </div>
             <!-- /.box-body -->
           </div>
-          <!-- /.box -->
-
-          <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">Existing API auto Jobs <span style="color: red;">Not Finish</span></h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <table id="example2" class="table table-bordered table-hover">
-                <thead>
-                <tr>
-                  <th>Job Name</th>
-                  <th>View Job</th>
-                  <th>Launch</th>
-                  <th>Comment</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>MPAPI-Feature-Test-ActivationAuthConfigDeactivation</td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-ActivationAuthConfigDeactivation/" class="small-box-footer">view job</a>
-                  </td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-ActivationAuthConfigDeactivation/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a>
-                  </td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>MPAPI-Feature-Test-CalibrationManagedossier</td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-CalibrationManagedossier/" class="small-box-footer">view job</a>
-                  </td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-CalibrationManagedossier/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a>
-                  </td>
-                  <td></td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
         </div>
-        <!-- /.col -->
       </div>
+      <!-- /.row (main row) -->
+
     </section>
     <!-- /.content -->
   </div>
@@ -527,9 +409,6 @@
 <script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <!-- Bootstrap WYSIHTML5 -->
 <script src="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-<!-- DataTables -->
-<script src="bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <!-- Slimscroll -->
 <script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->
@@ -541,17 +420,50 @@
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 <script>
-    $(function () {
-        $('#example1').DataTable()
-        $('#example2').DataTable({
-            'paging'      : true,
-            'lengthChange': false,
-            'searching'   : false,
-            'ordering'    : true,
-            'info'        : true,
-            'autoWidth'   : false
-        })
-    })
+    function loadData1() {
+        $('#DC_data').remove();
+        $('#DC_status').append('<div id="DC_data"></div>')
+        var versionInfo = document.getElementById("id_versions");
+        var currentSelected = versionInfo.options[versionInfo.selectedIndex].text;
+        // alert("will show " + currentSelected);
+        $.getJSON('MP_PD_Status_conf.json',function(json){
+            var data = json;
+            var html = '';
+            // var dcResultMap = new Map();
+            data.forEach(function (file, i) {
+                var newfilepath = file.split("#").join(currentSelected);
+
+                    $.getJSON(newfilepath,function(fdata){
+
+                            var lens1 = fdata.job_name.lastIndexOf("-");
+                            var lens = lens1-"MobilePostDeployment-Test-".length;
+                            var featureName = fdata.job_name.substr("MobilePostDeployment-Test-".length,lens);
+                            var passrate = fdata.pass_rate;
+                            var result = passrate === "100.0%";
+                            var executionAt = fdata.execution_start_time;
+
+                            html = '<div class="input-group margin">' +
+                                '<div class="input-group-btn"><button type="button" class="btn btn-default" style="width: 100px">'+featureName+'</button></div>'+
+                                '<div class="input-group-btn"><button type="button" class="btn btn-'+(result?"success":"danger")+'">'+(result?"Pass":"Fail")+'</button></div>'+
+                                '<div class="input-group-btn"><button type="button" class="btn btn-default" style="width: 150px">'+executionAt+'</button></div>'+
+                                '<input type="text" class="form-control">' +
+                                '</div>';
+                            $('#DC_data').append(html);
+                    });
+
+
+            });
+
+        });
+
+    }
+
+    function loadData() {
+        loadData1();
+
+    }
+
+    $(document).ready(loadData());
 </script>
 </body>
 </html>
