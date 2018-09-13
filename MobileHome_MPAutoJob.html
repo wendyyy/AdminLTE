@@ -84,7 +84,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="MobileHome_MPHeartbeat.html"><i class="fa fa-circle-o"></i> MP Heartbeat Calendar</a></li>
+            <!--<li><a href="MobileHome_MPHeartbeat.html"><i class="fa fa-circle-o"></i> MP Heartbeat Calendar</a></li>-->
+            <li><a href="/mp-ut-report/index.html" target="_blank"><i class="fa fa-circle-o"></i> MP UT Status</a></li>
             <li><a href="MobileHome_MPAPIStatus.html"><i class="fa fa-circle-o"></i> MP API Status</a></li>
             <li class="active"><a href="MobileHome_MPAutoJob.html"><i class="fa fa-circle-o"></i> MP Automation Job</a></li>
           </ul>
@@ -97,9 +98,9 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> iOS Sanity Status</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> iOS SanityStatus</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Automation Job</a></li>
+            <li><a href="Page_Not_Ready.html"><i class="fa fa-circle-o"></i> (TBD) iOS Sanity Status</a></li>
+            <li><a href="Page_Not_Ready.html"><i class="fa fa-circle-o"></i> (TBD) Android SanityStatus</a></li>
+            <li><a href="Page_Not_Ready.html"><i class="fa fa-circle-o"></i> (TBD) Automation Job</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -110,9 +111,9 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> Regression Home Status</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> iOS Regression Status</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Android Regression Status</a></li>
+            <li><a href="Page_Not_Ready.html"><i class="fa fa-circle-o"></i> (TBD) Regression Home Status</a></li>
+            <li><a href="MobileHome_IOSRegressionStatus.html"><i class="fa fa-circle-o"></i> iOS Regression Status</a></li>
+            <li><a href="MobileHome_AndroidRegressionStatus.html"><i class="fa fa-circle-o"></i> Android Regression Status</a></li>
             <li><a href="MobileHome_MPPDStatus.html"><i class="fa fa-circle-o"></i> MP Post Deployment Status</a></li>
           </ul>
         </li>
@@ -139,59 +140,6 @@
     <section class="content">
       <div class="row">
         <div class="col-xs-12">
-          <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">Auto Trigger Jobs</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <table id="example1" class="table table-bordered table-hover">
-                <thead>
-                <tr>
-                  <th>Job Name</th>
-                  <th>View Job</th>
-                  <th>Launch</th>
-                  <th>Comment</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>QAPATCHPREVIEW_Daily_API_Auto_Test</td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPDeploymentTrackOnPreviewSAPpium/" class="small-box-footer">view job</a>
-                  </td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPDeploymentTrackOnPreviewSAPpium/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a>
-                  </td>
-                  <td>Auto trigger at about 7:07 AM SH time</td>
-                </tr>
-                <tr>
-                  <td>QACAND_Daily_API_Auto_Test</td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPDeploymentTrackOnCandSAPpium/" class="small-box-footer">view job</a>
-                  </td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPDeploymentTrackOnCandSAPpium/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a>
-                  </td>
-                  <td>Auto trigger at about 6:48 AM SH time</td>
-                </tr>
-                <tr>
-                  <td>MP heartbeat monitor</td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPServerHeartbeatAndInfoCheck/" class="small-box-footer">view job</a>
-                  </td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPServerHeartbeatAndInfoCheck/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a>
-                  </td>
-                  <td>Auto trigger every 30 min</td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-
           <div class="box">
             <div class="box-header">
               <h3 class="box-title">Customize Your Job</h3>
@@ -246,10 +194,61 @@
             <!-- /.box-body -->
           </div>
           <!-- /.box -->
-
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Existing API auto Jobs <span style="color: red;">Not Finish</span></h3>
+              <h3 class="box-title">Auto Trigger Jobs <small style="color: red;">Please NOT launch for debug test</small></h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example3" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>Job Name</th>
+                  <th>View Job</th>
+                  <th>Launch</th>
+                  <th>Comment</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>QAPATCHPREVIEW_Daily_API_Auto_Test</td>
+                  <td>
+                    <a href="http://10.59.7.83:8080/job/MPDeploymentTrackOnPreviewSAPpium/" class="small-box-footer">view job</a>
+                  </td>
+                  <td>
+                    <a href="http://10.59.7.83:8080/job/MPDeploymentTrackOnPreviewSAPpium/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a>
+                  </td>
+                  <td>Auto trigger at about 7:07 AM SH time</td>
+                </tr>
+                <tr>
+                  <td>QACAND_Daily_API_Auto_Test</td>
+                  <td>
+                    <a href="http://10.59.7.83:8080/job/MPDeploymentTrackOnCandSAPpium/" class="small-box-footer">view job</a>
+                  </td>
+                  <td>
+                    <a href="http://10.59.7.83:8080/job/MPDeploymentTrackOnCandSAPpium/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a>
+                  </td>
+                  <td>Auto trigger at about 6:48 AM SH time</td>
+                </tr>
+                <tr>
+                  <td>MP heartbeat monitor</td>
+                  <td>
+                    <a href="http://10.59.7.83:8080/job/MPServerHeartbeatAndInfoCheck/" class="small-box-footer">view job</a>
+                  </td>
+                  <td>
+                    <a href="http://10.59.7.83:8080/job/MPServerHeartbeatAndInfoCheck/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a>
+                  </td>
+                  <td>Auto trigger every 30 min</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Existing API auto Jobs <small style="color: red;">Please NOT launch for debug test</small></h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -263,26 +262,32 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                  <td>MPAPI-Feature-Test-ActivationAuthConfigDeactivation</td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-ActivationAuthConfigDeactivation/" class="small-box-footer">view job</a>
-                  </td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-ActivationAuthConfigDeactivation/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a>
-                  </td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>MPAPI-Feature-Test-CalibrationManagedossier</td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-CalibrationManagedossier/" class="small-box-footer">view job</a>
-                  </td>
-                  <td>
-                    <a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-CalibrationManagedossier/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a>
-                  </td>
-                  <td></td>
-                </tr>
+                <tr><td>MPAPI-Feature-Test-RCM</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-RCM" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-RCM/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-Search</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Search" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Search/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-Orgchart</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Orgchart" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Orgchart/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-Todo</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Todo" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Todo/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-Paystatement</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Paystatement" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Paystatement/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-Timeoff-Old</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Timeoff-Old" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Timeoff-Old/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-Timesheet</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Timesheet" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Timesheet/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-AuthConfig</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-AuthConfig" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-AuthConfig/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-Homepage</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Homepage" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Homepage/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-Calibration</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Calibration" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Calibration/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-CPM</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-CPM" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-CPM/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-CPM-AchievementLinkGoal</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-CPM-AchievementLinkGoal" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-CPM-AchievementLinkGoal/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-CPM-ConitnuousFeedbacks</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-CPM-ConitnuousFeedbacks" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-CPM-ConitnuousFeedbacks/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-CPM-NestleFeedback</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-CPM-NestleFeedback" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-CPM-NestleFeedback/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-Managedossier</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Managedossier" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Managedossier/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-NativeGoal</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-NativeGoal" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-NativeGoal/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-Customstring</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Customstring" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Customstring/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-Activation</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Activation" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Activation/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-Deactivation</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Deactivation" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Deactivation/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-Hybrid</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Hybrid" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Hybrid/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-Jamaccess</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Jamaccess" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Jamaccess/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-MTR</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-MTR" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-MTR/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-PM</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-PM" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-PM/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-CDPGoal</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-CDPGoal" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-CDPGoal/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-Profile</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Profile" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-Profile/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
+                <tr><td>MPAPI-Feature-Test-GDPR</td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-GDPR" class="small-box-footer">view job</a></td><td><a href="http://10.59.7.83:8080/job/MPAPI-Feature-Test-GDPR/build?delay=0sec" class="small-box-footer">launch <i class="fa fa-arrow-circle-right"></i></a></td><td></td></tr>
                 </tbody>
               </table>
             </div>
@@ -542,8 +547,7 @@
 <script src="dist/js/demo.js"></script>
 <script>
     $(function () {
-        $('#example1').DataTable()
-        $('#example2').DataTable({
+        $('#example1').DataTable({
             'paging'      : true,
             'lengthChange': false,
             'searching'   : false,
@@ -551,6 +555,15 @@
             'info'        : true,
             'autoWidth'   : false
         })
+        $('#example3').DataTable({
+            'paging'      : true,
+            'lengthChange': false,
+            'searching'   : false,
+            'ordering'    : true,
+            'info'        : true,
+            'autoWidth'   : false
+        })
+        $('#example2').DataTable()
     })
 </script>
 </body>

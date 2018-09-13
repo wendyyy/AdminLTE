@@ -76,7 +76,7 @@
             <li><a href="index.html"><i class="fa fa-circle-o"></i> Mobile Home</a></li>
           </ul>
         </li>
-        <li class="active treeview">
+        <li class="treeview">
           <a href="#">
             <i class="fa fa-dashboard"></i> <span>MP Dashboard</span>
             <span class="pull-right-container">
@@ -84,8 +84,9 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="MobileHome_MPHeartbeat.html"><i class="fa fa-circle-o"></i> MP Heartbeat Calendar</a></li>
-            <li class="active"><a href="MobileHome_MPAPIStatus.html"><i class="fa fa-circle-o"></i> MP API Status</a></li>
+            <!--<li><a href="MobileHome_MPHeartbeat.html"><i class="fa fa-circle-o"></i> MP Heartbeat Calendar</a></li>-->
+            <li><a href="/mp-ut-report/index.html" target="_blank"><i class="fa fa-circle-o"></i> MP UT Status</a></li>
+            <li><a href="MobileHome_MPAPIStatus.html"><i class="fa fa-circle-o"></i> MP API Status</a></li>
             <li><a href="MobileHome_MPAutoJob.html"><i class="fa fa-circle-o"></i> MP Automation Job</a></li>
           </ul>
         </li>
@@ -97,9 +98,9 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> iOS Sanity Status</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> iOS SanityStatus</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Automation Job</a></li>
+            <li><a href="Page_Not_Ready.html"><i class="fa fa-circle-o"></i> (TBD) iOS Sanity Status</a></li>
+            <li><a href="Page_Not_Ready.html"><i class="fa fa-circle-o"></i> (TBD) Android SanityStatus</a></li>
+            <li><a href="Page_Not_Ready.html"><i class="fa fa-circle-o"></i> (TBD) Automation Job</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -110,9 +111,9 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> Regression Home Status</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> iOS Regression Status</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Android Regression Status</a></li>
+            <li><a href="Page_Not_Ready.html"><i class="fa fa-circle-o"></i> (TBD) Regression Home Status</a></li>
+            <li><a href="MobileHome_IOSRegressionStatus.html"><i class="fa fa-circle-o"></i> iOS Regression Status</a></li>
+            <li><a href="MobileHome_AndroidRegressionStatus.html"><i class="fa fa-circle-o"></i> Android Regression Status</a></li>
             <li><a href="MobileHome_MPPDStatus.html"><i class="fa fa-circle-o"></i> MP Post Deployment Status</a></li>
           </ul>
         </li>
@@ -155,7 +156,8 @@
                       <th style="width: 30px">Skipped</th>
                       <th style="width: 100px">Pass Rate</th>
                       <th style="width: 30px">ExecutionAt</th>
-                      <th style="width: 250px">ExecutionDuration</th>
+                      <th style="width: 30px">ExecutionDuration</th>
+                      <th style="width: 30px">DetailsLog</th>
                     </tr>
                     </thead>
                   </table>
@@ -281,6 +283,10 @@
 <script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <!-- Page script -->
 <script type="text/javascript">
+    function sortNumber(a, b)
+    {
+      return b - a
+    }
     function getParams(key) {
         var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
@@ -312,6 +318,13 @@
         var overall_comment = fdata.comment;
         var jobUniqueId = fdata.job_run_unique_id;
 
+        var jobLogLink = fdata.log_link;
+        var jobExecutionId = "";
+        if (jobLogLink !== "") {
+            jobLink = jobLogLink.substr(0, jobLogLink.lastIndexOf("/"));
+            jobExecutionId = jobLink.substr(jobLink.lastIndexOf("/")+1);
+        }
+
         html = '<tr>'+
             '<td>'+tested_count+'</td>'+
             '<td><span style="color:green">'+passed_count+'</span></td>'+
@@ -320,6 +333,7 @@
             '<td><span class="badge bg-'+(passrate==100?"green":(passrate>90?"yellow":"red"))+'">'+passrate+'%</td>'+
             '<td>' + executionAt + '</td>'+
             '<td>'+ executionDuration+'</td>' +
+            '<td>'+(jobLogLink ===""?"":'<a href="' + jobLogLink + '" class="small-box-footer" target="_blank">#'+jobExecutionId+'</a>')+'</td>' +
             '</tr>';
         html2 = '<tr>'+
             '<td><input id="'+saveCommentId+'" type="text" value="'+overall_comment+'" class="form-control"></td>'+
@@ -356,32 +370,41 @@
                 '<td>'+ caseName+'</td>' +
                 '<td>'+ testClass+'</td>' +
                 '<td>'+ testModule+'</td>' +
+
                 '</tr>';
             if(count === cases.length) {
                 detailsHtml='<tbody>'+detailsHtml+'</tbody>';
                 $('#table_details').append(detailsHtml);
-
+                var listNumbers = new Array();
+                var listMap = new Map();
+                var fnumber = "";
                 $.getJSON(listFile, function (fdata) {
 
                     var ffolderindex = fpath.lastIndexOf('_');
-                    var fnumber = fpath.substring(ffolderindex+1);
+                    fnumber = fpath.substring(ffolderindex+1);
 
-                    count = 0;
-                    var listBuild = '<label>Choose version in history</label><select id="id_versions" class="form-control" onchange="location = this.value;">';
-                    listBuild = listBuild + '<option value="#">' + fnumber + '</option>';
+                    var count2 = 0;
+                    
                     fdata.forEach(function (file) {
-                        count++;
+                      var executeId = file.id;
+                      var path = file.path;
+                      if(executeId !== "latest") {
+                        listNumbers[count2] = executeId;
+                      }
+                      listMap.set(executeId,path);
+                      count2++;
+                      if (count2 === fdata.length) {
+                        listNumbers.sort(sortNumber)
+                        var listBuild = '<label>Choose version in history</label><select id="id_versions" class="form-control" onchange="location = this.value;">';
+                        listBuild = listBuild + '<option value="#">' + fnumber + '</option>';
 
-                        var executeId = file.id;
-                        var path = file.path;
-
-                        listBuild = listBuild +
-                            '<option value="MobileHome_TestDetails.html?detailpath=' + path + '">' + executeId + '</option>';
-
-                        if (count === fdata.length) {
-                            listBuild = listBuild + '</select>';
-                            $('#table_title').append(listBuild);
-                        }
+                        listNumbers.forEach(function (ln) {
+                          listBuild = listBuild +
+                                    '<option value="MobileHome_TestDetails.html?detailpath=' + listMap.get(ln) + '">' + ln + '</option>';
+                        });
+                        listBuild = listBuild + '</select>';
+                        $('#table_title').append(listBuild);  
+                      }
 
                     });
                 });

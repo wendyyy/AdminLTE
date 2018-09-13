@@ -1,0 +1,5 @@
+{"default":"release1809",
+"mob": ["release1810","release1811","release1812"],
+"bizx": ["bizx1808Preview","bizx1808Production"],
+"other":"debug"
+}

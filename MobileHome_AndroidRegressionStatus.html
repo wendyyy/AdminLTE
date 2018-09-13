@@ -113,9 +113,9 @@
                            class="fa fa-circle-o"></i> (TBD) Regression Home Status</a></li>
                             <li><a href="MobileHome_IOSRegressionStatus.html"><i
                            class="fa fa-circle-o"></i> iOS Regression Status</a></li>
-                            <li><a href="MobileHome_AndroidRegressionStatus.html"><i
+                            <li class="active"><a href="MobileHome_AndroidRegressionStatus.html"><i
                            class="fa fa-circle-o"></i> Android Regression Status</a></li>
-                            <li class="active"><a href="MobileHome_MPPDStatus.html"><i
+                            <li><a href="MobileHome_MPPDStatus.html"><i
                            class="fa fa-circle-o"></i> MP Post Deployment Status</a></li>
                         </ul>
                     </li>
@@ -128,7 +128,7 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                  MP PD Status <small>Dashboard</small>
+                  Android Regression Status <small>Dashboard</small>
                </h1>
                 <!--ol class="breadcrumb">
                   <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -140,15 +140,7 @@
                 <div class="form-group">
                     <label>Choose a release version</label>
                     <select id="id_versions" class="form-control" onchange="loadData()">
-
-                        <!-- <option>release1809</option>
-                        <option>bizx1808Production</option>
-                        <option>release1810</option>
-                        <option>release1811</option>
-                        <option>release1812</option>
-                        <option>debug</option>
-                        <option>release1808</option>
-                        <option>bizx1808Preview</option> -->
+                        
                     </select>
                 </div>
             </div>
@@ -168,7 +160,8 @@
                                 <div class="tab-pane active" id="tab_1">
                                     <!-- Main row -->
                                     <div class="row">
-                                        <!-- <div class="col-xs-12">
+                                        <div class="col-xs-12">
+                                            <!-- Donut chart -->
                                             <div class="box box-primary">
                                                 <div class="box-header with-border">
                                                     <i class="fa fa-bar-chart-o"></i>
@@ -210,14 +203,17 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <!-- /.box-body-->
                                             </div>
-                                        </div> -->
+                                            <!-- /.box -->
+                                        </div>
+                                        <!-- /.box -->
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="box">
                                                 <div class="box-header">
-                                                    <h3 class="box-title">Status by Production DCs</h3>
+                                                    <h3 class="box-title">Status by Feature</h3>
                                                 </div>
                                                 <!-- /.box-header -->
                                                 <div class="box-body no-padding">
@@ -475,7 +471,7 @@
             '<th style="width: 30px">Rerun for Failures</th>\n' +
             '</tr>';
 
-        function loadData1(currentSelected, donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2) {
+        function loadData1(currentSelected) {
             $(tableId).empty();
             $(teamFMapId).empty();
             $(ownerFMapId).empty();
@@ -494,14 +490,12 @@
                 var mpBranchInfoList = "";
                 data.forEach(function(file, i) {
 
-                    // var newfilepath = file.replace("-Test/", "-Test-" + currentSelected + "/");
-                    // newfilepath = newfilepath.replace("Test_latest", "Test-" + currentSelected + "_latest");
-                    var newfilepath = file.split("#").join(currentSelected);
+                    var newfilepath = file.replace("-Test/", "-Test-" + currentSelected + "/");
+                    newfilepath = newfilepath.replace("Test_latest", "Test-" + currentSelected + "_latest");
 
                     $.getJSON(newfilepath, function(fdata) {
                         var jobname = fdata.job_name;
-                        var lens1 = jobname.lastIndexOf("-");
-                        var lens = lens1 - featureNameFilter1.length - featureNameFilter2.length;
+                        var lens = jobname.length - featureNameFilter1.length - featureNameFilter2.length;
                         var featureName = jobname.substr(featureNameFilter1.length, lens);
                         var passrate = fdata.pass_rate.substr(0, fdata.pass_rate.length - 1);
                         var team = fdata.team;
@@ -562,27 +556,27 @@
                         if (branchInfo != null && branchInfo !== "" && !mpBranchInfoList.includes(branchInfo)) {
                             mpBranchInfoList = (mpBranchInfoList === "") ? branchInfo : (mpBranchInfoList + "," + branchInfo);
                         }
-                        // if (count === data.length) {
-                        //     /*
-                        //      * DONUT CHART - overall
-                        //      * -----------
-                        //      */
-                        //     addOverallData(totalpass, totalfail, totalskip, donutChatId, teamFailMap, ownerFailMap, teamFMapId, ownerFMapId, featureFailMap, mpBranchInfoList, failureChatId);
+                        if (count === data.length) {
+                            /*
+                             * DONUT CHART - overall
+                             * -----------
+                             */
+                            addOverallData(totalpass, totalfail, totalskip, donutChatId, teamFailMap, ownerFailMap, teamFMapId, ownerFMapId, featureFailMap, mpBranchInfoList, failureChatId);
 
-                        // }
+                        }
 
                     }).fail(function(jqXHR) {
                         if (jqXHR.status == 404) {
                             //alert("404 Not Found");
                             count++;
-                            // if (count === data.length) {
-                            //     /*
-                            //      * DONUT CHART - overall
-                            //      * -----------
-                            //      */
-                            //     addOverallData(totalpass, totalfail, totalskip, donutChatId, teamFailMap, ownerFailMap, teamFMapId, ownerFMapId, featureFailMap, mpBranchInfoList, failureChatId);
+                            if (count === data.length) {
+                                /*
+                                 * DONUT CHART - overall
+                                 * -----------
+                                 */
+                                addOverallData(totalpass, totalfail, totalskip, donutChatId, teamFailMap, ownerFailMap, teamFMapId, ownerFMapId, featureFailMap, mpBranchInfoList, failureChatId);
 
-                            // }
+                            }
                         }
                     });
 
@@ -689,13 +683,13 @@
                         html = html + '<option>'+ caseDetails +'</option>';
                     });
                 }
-                if(versions.hasOwnProperty("bizx")) {
-                    var moblist = versions.bizx;
-                    moblist.forEach(function(caseDetails) {
+                // if(versions.hasOwnProperty("bizx")) {
+                //     var moblist = versions.bizx;
+                //     moblist.forEach(function(caseDetails) {
 
-                        html = html + '<option>'+ caseDetails +'</option>';
-                    });
-                }
+                //         html = html + '<option>'+ caseDetails +'</option>';
+                //     });
+                // }
                 if(versions.hasOwnProperty("other")) {
                     html = html + '<option>'+ versions.other +'</option>';
                 }
@@ -713,10 +707,10 @@
             teamFMapId = "#donut-chart-preview-byteam";
             ownerFMapId = "#donut-chart-preview-byowner";
             failureChatId = "#donut-chart-preview-overall-failures";
-            dataJsonFile = "MP_PD_Status_conf.json";
-            featureNameFilter1 = "MobilePostDeployment-Test-";
-            featureNameFilter2 = "";
-            loadData1(currentSelected, donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2);
+            dataJsonFile = "Android_Regression_Job_conf.json";
+            featureNameFilter1 = "Android-";
+            featureNameFilter2 = "-Test";
+            loadData1(currentSelected,donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2);
 
         }
         //save comment to Json - not done
