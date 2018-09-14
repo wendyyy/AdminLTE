@@ -584,8 +584,8 @@
             '<th style="width: 30px">ExecutionDuration</th>\n' +
             '<th style="width: 250px">Comment</th>\n' +
             '<th style="width: 30px"></th>\n' +
-            '<th style="width: 30px">Go To Details</th>\n' +
-            '<th style="width: 60px">Rerun for Failures</th>\n' +
+            '<th style="width: 30px">Details Report</th>\n' +
+            '<th style="width: 60px">Job Info / Log / Run</th>\n' +
             '</tr>';
 
         function loadData1(donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2,testENV) {
@@ -625,6 +625,9 @@
                         var jobRerunHtmlId = jobname+'_rerun_'+jobUniqueId;
                         var jobBuildHtmlId = jobname+'_build_new_';
                         if (jobLogLink !== "") {
+                            if(jobLogLink.indexOf(",")) {
+                                jobLogLink = jobLogLink.split(",")[0];
+                            }
                             jobLink = jobLogLink.substr(0, jobLogLink.lastIndexOf("/"));
                             jobLink = jobLink.substr(0, jobLink.lastIndexOf("/"));
                             
@@ -639,7 +642,7 @@
                             '<td>' + executionDuration + '</td>' +
                             '<td><input id="' + saveCommentId + '" type="text" value="' + comment + '" class="form-control"></td>' +
                             '<td><input id="' + (saveCommentId + '_button') + '" type="button" value="save" onclick="saveComment(\'' + file + '\',\'' + saveCommentId + '\',\'' + jobUniqueId + '\',\'comment\')"></td>' +
-                            '<td><a href="MobileHome_TestDetails.html?detailpath=' + file + '" class="small-box-footer" target="_blank"><i class="fa fa-arrow-circle-right"></i></a></td>' +
+                            '<td><button type="button" class="btn btn-default btn-xs"><a href="MobileHome_TestDetails.html?detailpath=' + file + '" class="small-box-footer" target="_blank">Details</a></button></td>' +
                             (jobLink == "" ? '<td></td>' : ('<td><div class="btn-group">'+
                             '<button type="button" class="btn btn-default btn-xs"><a href="' + jobLink + '" class="small-box-footer" target="_blank">View Job</a></button>'+
                             '<button type="button" class="btn btn-default btn-xs"><a href="' + jobLogLink + '" class="small-box-footer" target="_blank">View Log</a></button>' +
