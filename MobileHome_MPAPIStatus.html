@@ -585,7 +585,7 @@
             '<th style="width: 250px">Comment</th>\n' +
             '<th style="width: 30px"></th>\n' +
             '<th style="width: 30px">Go To Details</th>\n' +
-            '<th style="width: 30px">Rerun for Failures</th>\n' +
+            '<th style="width: 60px">Rerun for Failures</th>\n' +
             '</tr>';
 
         function loadData1(donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2,testENV) {
@@ -623,6 +623,7 @@
                         var rerunJobLink = "";
                         var jobLink = "";
                         var jobRerunHtmlId = jobname+'_rerun_'+jobUniqueId;
+                        var jobBuildHtmlId = jobname+'_build_new_';
                         if (jobLogLink !== "") {
                             jobLink = jobLogLink.substr(0, jobLogLink.lastIndexOf("/"));
                             jobLink = jobLink.substr(0, jobLink.lastIndexOf("/"));
@@ -639,9 +640,12 @@
                             '<td><input id="' + saveCommentId + '" type="text" value="' + comment + '" class="form-control"></td>' +
                             '<td><input id="' + (saveCommentId + '_button') + '" type="button" value="save" onclick="saveComment(\'' + file + '\',\'' + saveCommentId + '\',\'' + jobUniqueId + '\',\'comment\')"></td>' +
                             '<td><a href="MobileHome_TestDetails.html?detailpath=' + file + '" class="small-box-footer" target="_blank"><i class="fa fa-arrow-circle-right"></i></a></td>' +
-                            (jobLink == "" ? '<td></td>' : 
-                            (passrate == 100 ? ('<td><a href="' + jobLink + '" title="View Job - build #' + jobUniqueId + '" class="small-box-footer" target="_blank">View Job</a></td>') : 
-                            ('<td><input value="Rerun for build# ' + jobUniqueId + '" onclick="openRerunForm(\''+jobLink+'\',\''+testENV+'\',\''+jobUniqueId+'\',\''+jobRerunHtmlId+'\')"><span id="'+jobRerunHtmlId+'" type="button"></span></input></td>'))) +
+                            (jobLink == "" ? '<td></td>' : ('<td><div class="btn-group">'+
+                            '<button type="button" class="btn btn-default btn-xs"><a href="' + jobLink + '" class="small-box-footer" target="_blank">View Job</a></button>'+
+                            '<button type="button" class="btn btn-default btn-xs"><a href="' + jobLogLink + '" class="small-box-footer" target="_blank">View Log</a></button>' +
+                                (passrate == 100 ? ('<input class="btn btn-info btn-xs" value="Launch a new test" onclick="openBuildForm(\''+jobLink+'\',\''+testENV+'\',\''+jobBuildHtmlId+'\')"><span id="'+jobBuildHtmlId+'" type="button"></span></input>') :
+                                ('<input class="btn btn-warning btn-xs" value="Rerun failures" onclick="openRerunForm(\''+jobLink+'\',\''+testENV+'\',\''+jobUniqueId+'\',\''+jobRerunHtmlId+'\')"><span id="'+jobRerunHtmlId+'" type="button"></span></input>')) +
+                            '</div></td>'))+
                             // (rerunJobLink == "" ? '<td></td>' : (passrate == 100 ? ('<td><a href="' + jobLink + '" title="View Job - build #' + jobUniqueId + '" class="small-box-footer" target="_blank">View Job</a></td>') : ('<td><a href="' + rerunJobLink + '" title="Click to redirect to Jenkins build job page.\t\n[Server] - Select correct env info(qacand/qapatchpreview)\n[RunType] - Select reRun\n[reRunForId] - Input the build number: ' + jobUniqueId + '\n[MailTo] - Input correct email address\nClick Build button to launch the job" class="small-box-footer" target="_blank">Rerun for build# ' + jobUniqueId + '</a></td>'))) +
                             '</tr>';
 
@@ -814,22 +818,39 @@
 
         }
         
-        function openRerunForm(jobLink, testENV, jobRerunId,jobRerunHtmlId) {
+        function openBuildForm(jobLink, testENV, jobHtmlId) {
             var url = jobLink.replace('http://','http://mobileauto:19429e842657b2a7b5fdbc5645984247@');
             url = url + "/buildWithParameters";
-            $("#"+jobRerunHtmlId).empty()
+            $("#"+jobHtmlId).empty()
+            //<div class="col-md-3">
+            var formHtml='<div class="box"><div class="box box-success"><div class="box-header with-border"><h3 class="box-title">Launch a new test</h3>';
+            var buttonGroup='<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" onclick="closeFormPopup(\''+jobHtmlId+'\')"><i class="fa fa-times"></i></button></div> </div>';
+            var forBody2='<form target="_blank" action="'+url+'" method="post"><div class="form-group"><input type="hidden" name="token" id="token" value="$APIAutoRemoteTriggerKey"></div><div class="form-group"><label class="control-sidebar-subheading" for="Node">Node<input class="pull-right" name="Node" id="Node" value="Slave-180"></label></div><div class="form-group"><label class="control-sidebar-subheading" for="Server">Server<input class="pull-right" name="Server" id="Server" value="'+testENV+'"></label></div><div class="form-group"><input type="hidden"  class="pull-right" name="RunType" id="RunType" value="newRun"></div><div class="form-group"><label class="control-sidebar-subheading" for="MailTo">MailTo<input class="pull-right" name="MailTo" id="MailTo" value=""></label></div><input type="submit" value="click To Run"></form>';
+            
+            var formBody='<div class="box-body">'+forBody2;
+            var afterFormBody='<div><a href="' + jobLink + '" title="view the job, or check if job launched" class="small-box-footer" target="_blank">View Job(check if job launched, etc)</a></div>'
+            var formHtml=formHtml+buttonGroup+formBody+afterFormBody+'</div></div></div>';
+                
+            $("#"+jobHtmlId).append(formHtml);
+        }
+
+        function openRerunForm(jobLink, testENV, jobRerunId,jobHtmlId) {
+            var url = jobLink.replace('http://','http://mobileauto:19429e842657b2a7b5fdbc5645984247@');
+            url = url + "/buildWithParameters";
+            $("#"+jobHtmlId).empty()
             //<div class="col-md-3">
             var formHtml='<div class="box"><div class="box box-success"><div class="box-header with-border"><h3 class="box-title">Rerun failures in #'+jobRerunId+'</h3>';
-            var buttonGroup='<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" onclick="closeRerunFormPopup(\''+jobRerunHtmlId+'\')"><i class="fa fa-times"></i></button></div> </div>';
-            var forBody2='<form target="_parent" action="'+url+'" method="post"><div><input type="hidden" name="token" id="token" value="$APIAutoRemoteTriggerKey"></div><div><label for="Node">Node</label><input name="Node" id="Node" value="Slave-180"></div><div><label for="Server">Server</label><input name="Server" id="Server" value="'+testENV+'"></div><div><label for="RunType">RunType</label><input name="RunType" id="RunType" value="reRun"></div><div><label for="reRunForId">reRunForId</label><input name="reRunForId" id="reRunForId" value="'+jobRerunId+'"></div><div><label for="MailTo">MailTo</label><input name="MailTo" id="MailTo" value=""></div><input type="submit" value="Submit"></form>';
+            var buttonGroup='<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" onclick="closeFormPopup(\''+jobHtmlId+'\')"><i class="fa fa-times"></i></button></div> </div>';
+            var forBody2='<form target="_blank" action="'+url+'" method="post"><div class="form-group"><input type="hidden" name="token" id="token" value="$APIAutoRemoteTriggerKey"></div><div class="form-group"><label class="control-sidebar-subheading" for="Node">Node<input class="pull-right" name="Node" id="Node" value="Slave-180"></label></div><div class="form-group"><label class="control-sidebar-subheading" for="Server">Server<input class="pull-right" name="Server" id="Server" value="'+testENV+'"></label></div><div class="form-group"><label class="control-sidebar-subheading" for="RunType">RunType<input class="pull-right" name="RunType" id="RunType" value="reRun"></label></div><div class="form-group"><label class="control-sidebar-subheading" for="reRunForId">reRunForId<input class="pull-right" name="reRunForId" id="reRunForId" value="'+jobRerunId+'"></label></div><div class="form-group"><label class="control-sidebar-subheading" for="MailTo">MailTo<input class="pull-right" name="MailTo" id="MailTo" value=""></label></div><input type="submit" value="click To Rerun"></form>';
             
-            var formBody='<div class="box-body">'+forBody2+'</div>';
-            var formHtml=formHtml+buttonGroup+formBody+'</div></div>';
+            var formBody='<div class="box-body">'+forBody2;
+            var afterFormBody='<div><a href="' + jobLink + '" title="view the job, or check if job launched" class="small-box-footer" target="_blank">View Job(check if job launched, etc)</a></div>'
+            var formHtml=formHtml+buttonGroup+formBody+afterFormBody+'</div></div></div>';
                 
-            $("#"+jobRerunHtmlId).append(formHtml);
+            $("#"+jobHtmlId).append(formHtml);
         }
-        function closeRerunFormPopup(jobRerunHtmlId) {
-            $("#"+jobRerunHtmlId).empty()
+        function closeFormPopup(jobHtmlId) {
+            $("#"+jobHtmlId).empty()
         }
 
 
