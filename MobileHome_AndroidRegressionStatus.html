@@ -457,7 +457,7 @@
     <script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
     <!-- Page script -->
     <script>
-        var table_header_html = '<tr>\n' +
+        var table_header_html = '<thead><tr>\n' +
             '<th style="width: 60px">Team</th>\n' +
             '<th style="width: 60px">Feature</th>\n' +
             '<th style="width: 100px">Pass Rate</th>\n' +
@@ -465,11 +465,12 @@
             '<th style="width: 30px">Fail/Total</th>\n' +
             '<th style="width: 30px">ExecutionAt</th>\n' +
             '<th style="width: 30px">ExecutionDuration</th>\n' +
-            '<th style="width: 250px">Comment</th>\n' +
+            '<th style="width: 30px">Owner</th>\n' +
+            '<th style="width: 30px">Comment</th>\n' +
             '<th style="width: 30px"></th>\n' +
-            '<th style="width: 30px">Go To Details</th>\n' +
-            '<th style="width: 30px">Rerun for Failures</th>\n' +
-            '</tr>';
+            '<th style="width: 30px">Details Report</th>\n' +
+            '<th style="width: 60px">Job Info / Log / Run</th>\n' +
+            '</tr></thead><tbody>'
 
         function loadData1(currentSelected) {
             $(tableId).empty();
@@ -495,7 +496,7 @@
 
                     $.getJSON(newfilepath, function(fdata) {
                         var jobname = fdata.job_name;
-                        var lens = jobname.length - featureNameFilter1.length - featureNameFilter2.length;
+                        var lens = jobname.length - featureNameFilter1.length - featureNameFilter2.length - currentSelected.length - 1;
                         var featureName = jobname.substr(featureNameFilter1.length, lens);
                         var passrate = fdata.pass_rate.substr(0, fdata.pass_rate.length - 1);
                         var team = fdata.team;
@@ -509,10 +510,15 @@
                         var jobLogLink = fdata.log_link;
                         var rerunJobLink = "";
                         var jobLink = "";
+                        var jobRerunHtmlId = jobname+'_rerun_'+jobUniqueId;
+                        var jobBuildHtmlId = jobname+'_build_new_';
                         if (jobLogLink !== "") {
+                            if(jobLogLink.indexOf(",")) {
+                                jobLogLink = jobLogLink.split(",")[0];
+                            }
                             jobLink = jobLogLink.substr(0, jobLogLink.lastIndexOf("/"));
                             jobLink = jobLink.substr(0, jobLink.lastIndexOf("/"));
-                            rerunJobLink = jobLink + "/build";
+                            
                         }
                         html = '<tr>' +
                             '<td>' + team + '</td>' +
@@ -522,11 +528,21 @@
                             '<td>' + (parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count)) + '/' + (parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count) + parseInt(fdata.pass_case_count)) + '</td>' +
                             '<td>' + executionAt + '</td>' +
                             '<td>' + executionDuration + '</td>' +
+                            '<td>' + owner + '</td>' +
                             '<td><input id="' + saveCommentId + '" type="text" value="' + comment + '" class="form-control"></td>' +
                             '<td><input id="' + (saveCommentId + '_button') + '" type="button" value="save" onclick="saveComment(\'' + newfilepath + '\',\'' + saveCommentId + '\',\'' + jobUniqueId + '\',\'comment\')"></td>' +
-                            '<td><a href="MobileHome_TestDetails.html?detailpath=' + newfilepath + '" class="small-box-footer" target="_blank"><i class="fa fa-arrow-circle-right"></i></a></td>' +
-                            (rerunJobLink == "" ? '<td></td>' : (passrate == 100 ? ('<td><a href="' + jobLink + '" title="View Job - build #' + jobUniqueId + '" class="small-box-footer" target="_blank">View Job</a></td>') : ('<td><a href="' + rerunJobLink + '" title="Click to redirect to Jenkins build job page.\t\n[Server] - Select correct env info(qacand/qapatchpreview)\n[RunType] - Select reRun\n[reRunForId] - Input the build number: ' + jobUniqueId + '\n[MailTo] - Input correct email address\nClick Build button to launch the job" class="small-box-footer" target="_blank">Rerun for build# ' + jobUniqueId + '</a></td>'))) +
+                            '<td><button type="button" class="btn btn-default btn-xs"><a href="MobileHome_TestDetails.html?detailpath=' + newfilepath + '" class="small-box-footer" target="_blank">Details</a></button></td>' +
+                            (jobLink == "" ? '<td></td>' : ('<td><div class="btn-group">'+
+                            '<button type="button" class="btn btn-default btn-xs"><a href="' + jobLink + '" class="small-box-footer" target="_blank">View Job</a></button>'+
+                            '<button type="button" class="btn btn-default btn-xs"><a href="' + jobLogLink + '" class="small-box-footer" target="_blank">View Log</a></button>' +
+                                (passrate == 100 ? ('<input class="btn btn-info btn-xs" value="Launch a new test" onclick="openBuildForm(\''+jobLink+'\',\''+currentSelected+'\',\''+jobBuildHtmlId+'\')"><span id="'+jobBuildHtmlId+'" type="button"></span></input>') :
+                                ('<input class="btn btn-warning btn-xs" value="Rerun failures" onclick="openRerunForm(\''+jobLink+'\',\''+currentSelected+'\',\''+jobUniqueId+'\',\''+jobRerunHtmlId+'\')"><span id="'+jobRerunHtmlId+'" type="button"></span></input>')) +
+                            '</div></td>'))+
+                            // (rerunJobLink == "" ? '<td></td>' : (passrate == 100 ? ('<td><a href="' + jobLink + '" title="View Job - build #' + jobUniqueId + '" class="small-box-footer" target="_blank">View Job</a></td>') : ('<td><a href="' + rerunJobLink + '" title="Click to redirect to Jenkins build job page.\t\n[Server] - Select correct env info(qacand/qapatchpreview)\n[RunType] - Select reRun\n[reRunForId] - Input the build number: ' + jobUniqueId + '\n[MailTo] - Input correct email address\nClick Build button to launch the job" class="small-box-footer" target="_blank">Rerun for build# ' + jobUniqueId + '</a></td>'))) +
                             '</tr>';
+                            // '<td><a href="MobileHome_TestDetails.html?detailpath=' + newfilepath + '" class="small-box-footer" target="_blank"><i class="fa fa-arrow-circle-right"></i></a></td>' +
+                            // (rerunJobLink == "" ? '<td></td>' : (passrate == 100 ? ('<td><a href="' + jobLink + '" title="View Job - build #' + jobUniqueId + '" class="small-box-footer" target="_blank">View Job</a></td>') : ('<td><a href="' + rerunJobLink + '" title="Click to redirect to Jenkins build job page.\t\n[Server] - Select correct env info(qacand/qapatchpreview)\n[RunType] - Select reRun\n[reRunForId] - Input the build number: ' + jobUniqueId + '\n[MailTo] - Input correct email address\nClick Build button to launch the job" class="small-box-footer" target="_blank">Rerun for build# ' + jobUniqueId + '</a></td>'))) +
+                            // '</tr>';
 
                         $(tableId).append(html);
                         count += 1;
@@ -557,6 +573,8 @@
                             mpBranchInfoList = (mpBranchInfoList === "") ? branchInfo : (mpBranchInfoList + "," + branchInfo);
                         }
                         if (count === data.length) {
+                            $(tableId).append("</tbody>");
+                            $(tableId).DataTable();
                             /*
                              * DONUT CHART - overall
                              * -----------
@@ -570,7 +588,9 @@
                             //alert("404 Not Found");
                             count++;
                             if (count === data.length) {
-                                /*
+                                $(tableId).append("</tbody>");
+                                $(tableId).DataTable();
+                            /*
                                  * DONUT CHART - overall
                                  * -----------
                                  */
@@ -713,6 +733,72 @@
             loadData1(currentSelected,donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2);
 
         }
+        
+        /**
+        * Run / Rerun Jenkins job Form popup
+        */
+        function openBuildForm(jobLink, testENV, jobHtmlId) {
+            var versionInfo = document.getElementById("id_versions");
+            var currentSelected = versionInfo.options[versionInfo.selectedIndex].text;
+
+            var url = jobLink.replace('http://','http://mobileauto:19429e842657b2a7b5fdbc5645984247@');
+            url = url + "/buildWithParameters";
+            $("#"+jobHtmlId).empty()
+            //<div class="col-md-3">
+            var formHtml='<div class="box"><div class="box box-success"><div class="box-header with-border"><h3 class="box-title">Launch a new test</h3>';
+            var buttonGroup='<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" onclick="closeFormPopup(\''+jobHtmlId+'\')"><i class="fa fa-times"></i></button></div> </div>';
+             var forBody2='<form target="_blank" action="'+url+'" method="post">'+
+                '<div class="form-group"><input type="hidden" name="token" id="token" value="$APIAutoRemoteTriggerKey"></div>'+
+                '<div class="form-group"><label class="control-sidebar-subheading" for="Node">Node &nbsp;<input class="pull-right" name="Node" id="Node" value="Slave-9A"></label></div>'+
+                '<div class="form-group"><label class="control-sidebar-subheading" for="Server">Server &nbsp;<input class="pull-right" name="Server" id="Server" value="qapatchpreview"></label></div>'+
+                // '<div class="form-group"><label class="control-sidebar-subheading" for="Node">Node<input id="Node" list="node_value"><datalist id="node_value"><option value="Slave-11A">Slave-11A</option><option value="Slave-9A">Slave-9A</option></datalist></label></div>'+
+                // '<div class="form-group"><label class="control-sidebar-subheading" for="Server">Server<input id="Server" list="server_value"><datalist id="server_value"><option value="qapatchpreview">qapatchpreview</option><option value="qacand">qacand</option><option value="docker">docker</option></datalist></label></div>'+
+                '<div class="form-group"><input type="hidden" class="pull-right" name="RunType" id="RunType" value="newRun"></div>'+
+                '<br><div class="form-group"><label class="control-sidebar-subheading" for="RerunCycle">RerunCycle &nbsp;<input class="pull-right" name="RerunCycle" id="RerunCycle" value="0"></label></div>'+
+                '<div class="form-group"><label class="control-sidebar-subheading" for="MailTo">MailTo &nbsp;<input class="pull-right" name="MailTo" id="MailTo" value=""></label></div>'+
+                '<div class="form-group"><label class="control-sidebar-subheading" for="TestFor">TestFor &nbsp;<input class="pull-right" name="TestFor" id="TestFor" value="'+currentSelected+'"></label></div>'+
+                '<input type="submit" value="click To Run"></form>';
+            
+            var formBody='<div class="box-body">'+forBody2;
+            var afterFormBody='<div><a href="' + jobLink + '" title="view the job, or check if job launched" class="small-box-footer" target="_blank">View Job(check if job launched, etc)</a></div>'
+            var formHtml=formHtml+buttonGroup+formBody+afterFormBody+'</div></div></div>';
+                
+            $("#"+jobHtmlId).append(formHtml);
+        }
+
+        function openRerunForm(jobLink, testENV, jobRerunId,jobHtmlId) {
+            var versionInfo = document.getElementById("id_versions");
+            var currentSelected = versionInfo.options[versionInfo.selectedIndex].text;
+
+            var url = jobLink.replace('http://','http://mobileauto:19429e842657b2a7b5fdbc5645984247@');
+            url = url + "/buildWithParameters";
+            $("#"+jobHtmlId).empty()
+            //<div class="col-md-3">
+            var formHtml='<div class="box"><div class="box box-success"><div class="box-header with-border"><h3 class="box-title">Rerun failures in #'+jobRerunId+'</h3>';
+            var buttonGroup='<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" onclick="closeFormPopup(\''+jobHtmlId+'\')"><i class="fa fa-times"></i></button></div> </div>';
+            var forBody2='<form target="_blank" action="'+url+'" method="post">'+
+                '<div class="form-group"><input type="hidden" name="token" id="token" value="$APIAutoRemoteTriggerKey"></div>'+
+                '<div class="form-group"><label class="control-sidebar-subheading" for="Node">Node &nbsp;<input class="pull-right" name="Node" id="Node" value="Slave-9A"></label></div>'+
+                '<div class="form-group"><label class="control-sidebar-subheading" for="Server">Server &nbsp;<input class="pull-right" name="Server" id="Server" value="qapatchpreview"></label></div>'+
+                // '<div class="form-group"><label class="control-sidebar-subheading" for="Node">Node<input list="Node"><datalist id="Node"><option value="Slave-11A">Slave-11A</option><option value="Slave-9A">Slave-9A</option></datalist></label></div>'+
+                // '<div class="form-group"><label class="control-sidebar-subheading" for="Server">Server<input list="Server"><datalist id="Server"><option value="qapatchpreview">qapatchpreview</option><option value="qacand">qacand</option><option value="docker">docker</option></datalist></label></div>'+
+                '<div class="form-group"><label class="control-sidebar-subheading" for="RunType">RunType &nbsp; reRun<input type="hidden" class="pull-right" name="RunType" id="RunType" value="reRun" readonly="true"></label></div>'+
+                '<br><div class="form-group"><label class="control-sidebar-subheading" for="reRunForId">reRunForId &nbsp; '+jobRerunId+'<input type="hidden" class="pull-right" name="reRunForId" id="reRunForId" value="'+jobRerunId+'" readonly="true"></label></div>' + 
+		        '<br><div class="form-group"><label class="control-sidebar-subheading" for="RerunCycle">RerunCycle &nbsp;<input class="pull-right" name="RerunCycle" id="RerunCycle" value="1"></label></div>'+
+                '<div class="form-group"><label class="control-sidebar-subheading" for="MailTo">MailTo &nbsp;<input class="pull-right" name="MailTo" id="MailTo" value=""></label></div>'+
+                '<div class="form-group"><label class="control-sidebar-subheading" for="TestFor">TestFor &nbsp;<input class="pull-right" name="TestFor" id="TestFor" value="'+currentSelected+'"></label></div>'+
+                '<input type="submit" value="click To Rerun"></form>';
+
+            var formBody='<div class="box-body">'+forBody2;
+            var afterFormBody='<div><a href="' + jobLink + '" title="view the job, or check if job launched" class="small-box-footer" target="_blank">View Job(check if job launched, etc)</a></div>'
+            var formHtml=formHtml+buttonGroup+formBody+afterFormBody+'</div></div></div>';
+                
+            $("#"+jobHtmlId).append(formHtml);
+        }
+        function closeFormPopup(jobHtmlId) {
+            $("#"+jobHtmlId).empty()
+        }
+
         //save comment to Json - not done
         function saveComment(file, id, jobId, commentOrDetails) {
             var content = $("#" + id).val();

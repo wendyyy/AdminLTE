@@ -574,7 +574,7 @@
     <script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
     <!-- Page script -->
     <script>
-        var table_header_html = '<tr>\n' +
+        var table_header_html = '<thead><tr>\n' +
             '<th style="width: 60px">Team</th>\n' +
             '<th style="width: 60px">Feature</th>\n' +
             '<th style="width: 100px">Pass Rate</th>\n' +
@@ -582,11 +582,12 @@
             '<th style="width: 30px">Fail/Total</th>\n' +
             '<th style="width: 30px">ExecutionAt</th>\n' +
             '<th style="width: 30px">ExecutionDuration</th>\n' +
-            '<th style="width: 250px">Comment</th>\n' +
+            '<th style="width: 30px">Owner</th>\n' +
+            '<th style="width: 30px">Comment</th>\n' +
             '<th style="width: 30px"></th>\n' +
             '<th style="width: 30px">Details Report</th>\n' +
             '<th style="width: 60px">Job Info / Log / Run</th>\n' +
-            '</tr>';
+            '</tr></thead><tbody>';
 
         function loadData1(donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2,testENV) {
             $(tableId).empty();
@@ -640,6 +641,7 @@
                             '<td>' + (parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count)) + '/' + (parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count) + parseInt(fdata.pass_case_count)) + '</td>' +
                             '<td>' + executionAt + '</td>' +
                             '<td>' + executionDuration + '</td>' +
+                            '<td>' + owner + '</td>' +
                             '<td><input id="' + saveCommentId + '" type="text" value="' + comment + '" class="form-control"></td>' +
                             '<td><input id="' + (saveCommentId + '_button') + '" type="button" value="save" onclick="saveComment(\'' + file + '\',\'' + saveCommentId + '\',\'' + jobUniqueId + '\',\'comment\')"></td>' +
                             '<td><button type="button" class="btn btn-default btn-xs"><a href="MobileHome_TestDetails.html?detailpath=' + file + '" class="small-box-footer" target="_blank">Details</a></button></td>' +
@@ -681,6 +683,8 @@
                             mpBranchInfoList = (mpBranchInfoList === "") ? branchInfo : (mpBranchInfoList + "," + branchInfo);
                         }
                         if (count === data.length) {
+                            $(tableId).append("</tbody>");
+                            $(tableId).DataTable()
                             /*
                              * DONUT CHART - overall
                              * -----------
@@ -694,6 +698,8 @@
                             //alert("404 Not Found");
                             count++;
                             if (count === data.length) {
+                                $(tableId).append("</tbody>");
+                                $(tableId).DataTable()
                                 /*
                                  * DONUT CHART - overall
                                  * -----------
@@ -804,7 +810,6 @@
                 featureNameFilter1 = "MPAPI-Feature-Test-";
                 featureNameFilter2 = "-qapatchpreview";
                 testENV="qapatchpreview";
-                loadData1(donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2,testENV);
             }
             if (dataNumber === 2) {
                 tableId = "#table_qacand";
@@ -816,11 +821,13 @@
                 featureNameFilter1 = "MPAPI-Feature-Test-";
                 featureNameFilter2 = "-qacand";
                 testENV="qacand";
-                loadData1(donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2,testENV);
             }
-
+            loadData1(donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2,testENV);
         }
         
+        /**
+        * Run / Rerun Jenkins job Form popup
+        */
         function openBuildForm(jobLink, testENV, jobHtmlId) {
             var url = jobLink.replace('http://','http://mobileauto:19429e842657b2a7b5fdbc5645984247@');
             url = url + "/buildWithParameters";
@@ -828,7 +835,13 @@
             //<div class="col-md-3">
             var formHtml='<div class="box"><div class="box box-success"><div class="box-header with-border"><h3 class="box-title">Launch a new test</h3>';
             var buttonGroup='<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" onclick="closeFormPopup(\''+jobHtmlId+'\')"><i class="fa fa-times"></i></button></div> </div>';
-            var forBody2='<form target="_blank" action="'+url+'" method="post"><div class="form-group"><input type="hidden" name="token" id="token" value="$APIAutoRemoteTriggerKey"></div><div class="form-group"><label class="control-sidebar-subheading" for="Node">Node<input class="pull-right" name="Node" id="Node" value="Slave-180"></label></div><div class="form-group"><label class="control-sidebar-subheading" for="Server">Server<input class="pull-right" name="Server" id="Server" value="'+testENV+'"></label></div><div class="form-group"><input type="hidden"  class="pull-right" name="RunType" id="RunType" value="newRun"></div><div class="form-group"><label class="control-sidebar-subheading" for="MailTo">MailTo<input class="pull-right" name="MailTo" id="MailTo" value=""></label></div><input type="submit" value="click To Run"></form>';
+            var forBody2='<form target="_blank" action="'+url+'" method="post">'+
+		        '<div class="form-group"><input type="hidden" name="token" id="token" value="$APIAutoRemoteTriggerKey"></div>'+
+                '<div class="form-group"><label class="control-sidebar-subheading" for="Node">Node &nbsp;<input class="pull-right" name="Node" id="Node" value="Slave-178"></label></div>'+
+                '<div class="form-group"><label class="control-sidebar-subheading" for="Server">Server &nbsp;<input class="pull-right" name="Server" id="Server" value="'+testENV+'"></label></div>'+
+		        '<div class="form-group"><input type="hidden"  class="pull-right" name="RunType" id="RunType" value="newRun"></div>'+
+		        '<div class="form-group"><label class="control-sidebar-subheading" for="MailTo">MailTo &nbsp;<input class="pull-right" name="MailTo" id="MailTo" value=""></label></div>'+
+		        '<input type="submit" value="click To Run"></form>';
             
             var formBody='<div class="box-body">'+forBody2;
             var afterFormBody='<div><a href="' + jobLink + '" title="view the job, or check if job launched" class="small-box-footer" target="_blank">View Job(check if job launched, etc)</a></div>'
@@ -844,8 +857,17 @@
             //<div class="col-md-3">
             var formHtml='<div class="box"><div class="box box-success"><div class="box-header with-border"><h3 class="box-title">Rerun failures in #'+jobRerunId+'</h3>';
             var buttonGroup='<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" onclick="closeFormPopup(\''+jobHtmlId+'\')"><i class="fa fa-times"></i></button></div> </div>';
-            var forBody2='<form target="_blank" action="'+url+'" method="post"><div class="form-group"><input type="hidden" name="token" id="token" value="$APIAutoRemoteTriggerKey"></div><div class="form-group"><label class="control-sidebar-subheading" for="Node">Node<input class="pull-right" name="Node" id="Node" value="Slave-180"></label></div><div class="form-group"><label class="control-sidebar-subheading" for="Server">Server<input class="pull-right" name="Server" id="Server" value="'+testENV+'"></label></div><div class="form-group"><label class="control-sidebar-subheading" for="RunType">RunType<input class="pull-right" name="RunType" id="RunType" value="reRun"></label></div><div class="form-group"><label class="control-sidebar-subheading" for="reRunForId">reRunForId<input class="pull-right" name="reRunForId" id="reRunForId" value="'+jobRerunId+'"></label></div><div class="form-group"><label class="control-sidebar-subheading" for="MailTo">MailTo<input class="pull-right" name="MailTo" id="MailTo" value=""></label></div><input type="submit" value="click To Rerun"></form>';
-            
+            var forBody2='<form target="_blank" action="'+url+'" method="post">'+
+		        '<div class="form-group"><input type="hidden" name="token" id="token" value="$APIAutoRemoteTriggerKey"></div>'+
+                '<div class="form-group"><label class="control-sidebar-subheading" for="Node">Node &nbsp;<input class="pull-right" name="Node" id="Node" value="Slave-178"></label></div>'+
+                '<div class="form-group"><label class="control-sidebar-subheading" for="Server">Server &nbsp;<input class="pull-right" name="Server" id="Server" value="'+testENV+'"></label></div>'+
+		        // '<div class="form-group"><label class="control-sidebar-subheading" for="Node">Node<select><option value="Slave-178">Slave-178</option><option value="Slave-180">Slave-180</option></select></label></div>'+
+		        // '<div class="form-group"><label class="control-sidebar-subheading" for="Server">Server<select><option value="'+testENV+'">'+testENV+'</option></select></label></div>'+
+		        '<div class="form-group"><label class="control-sidebar-subheading" for="RunType">RunType &nbsp; reRun<input type="hidden" class="pull-right" name="RunType" id="RunType" value="reRun" readonly="true"></label></div>'+
+                '<br><div class="form-group"><label class="control-sidebar-subheading" for="reRunForId">reRunForId &nbsp; '+jobRerunId+'<input type="hidden" class="pull-right" name="reRunForId" id="reRunForId" value="'+jobRerunId+'" readonly="true"></label></div>' + 
+		        '<div class="form-group"><label class="control-sidebar-subheading" for="MailTo">MailTo &nbsp;<input class="pull-right" name="MailTo" id="MailTo" value=""></label></div>'+
+		        '<input type="submit" value="click To Run"></form>';
+
             var formBody='<div class="box-body">'+forBody2;
             var afterFormBody='<div><a href="' + jobLink + '" title="view the job, or check if job launched" class="small-box-footer" target="_blank">View Job(check if job launched, etc)</a></div>'
             var formHtml=formHtml+buttonGroup+formBody+afterFormBody+'</div></div></div>';
