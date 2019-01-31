@@ -60,11 +60,13 @@
       <li class="treeview"> <a href="#"> <i class="fa fa-dashboard"></i> <span>Mobile Dashboard</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a> 
        <ul class="treeview-menu"> 
         <li><a href="index.html"><i class="fa fa-circle-o"></i> Mobile Home</a></li> 
+        <li><a href="MobileHome_SFURL.html"><i class="fa fa-circle-o"></i> SF URL List</a></li> 
        </ul> </li> 
       <li class="treeview"> <a href="#"> <i class="fa fa-dashboard"></i> <span>MP Dashboard</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a> 
        <ul class="treeview-menu"> 
-        <!--<li><a href="MobileHome_MPHeartbeat.html"><i class="fa fa-circle-o"></i> MP Heartbeat Calendar</a></li>--> 
+        <li><a href="MobileHome_MPServiceMonitorByMonth.html"><i class="fa fa-circle-o"></i> MP Heartbeat Monitor by Month</a></li> 
         <li><a href="/mp-ut-report/index.html" target="_blank"><i class="fa fa-circle-o"></i> MP UT Status</a></li> 
+        <li><a href="https://confluence.successfactors.com/pages/viewpage.action?pageId=253382020" target="_blank"><i class="fa fa-circle-o"></i> MP UT Coverage Chart</a></li> 
         <li><a href="MobileHome_MPAPIStatus.html"><i class="fa fa-circle-o"></i> MP API Status</a></li> 
         <li><a href="MobileHome_MPAutoJob.html"><i class="fa fa-circle-o"></i> MP Automation Job</a></li> 
        </ul> </li> 
@@ -77,8 +79,11 @@
       <li class="treeview"> <a href="#"> <i class="fa fa-dashboard"></i> <span>Regression Dashboard</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a> 
        <ul class="treeview-menu"> 
         <li><a href="Page_Not_Ready.html"><i class="fa fa-circle-o"></i> (TBD) Regression Home Status</a></li> 
+        <li><a href="MobileHome_MPAPIStatus.html"><i class="fa fa-circle-o"></i> MP API Regression Status</a></li> 
         <li><a href="MobileHome_IOSRegressionStatus.html"><i class="fa fa-circle-o"></i> iOS Regression Status</a></li> 
         <li><a href="MobileHome_AndroidRegressionStatus.html"><i class="fa fa-circle-o"></i> Android Regression Status</a></li> 
+        <li><a href="MobileHome_EndToEndPeformance.html"><i class="fa fa-circle-o"></i> Mobile E2E Peformance Status</a></li> 
+        <li><a href="MobileHome_LMSMobileStatus.html"><i class="fa fa-circle-o"></i> Mobile LMS Mobile Status</a></li> 
         <li><a href="MobileHome_MPPDStatus.html"><i class="fa fa-circle-o"></i> MP Post Deployment Status</a></li> 
        </ul> </li> 
      </ul> 
@@ -252,7 +257,7 @@
               alivecount ++;
               color = "green";
               statusToString = " alive ";
-            } else if (status.indexOf('Down') > 0 ) {
+            } else if (status.indexOf('Down') >= 0 ) {
               downcount ++;
               color = "red";
               statusToString = "  down ";
@@ -415,6 +420,6 @@
         window.location.reload(true);
         return xmlHttp.responseText;
     }
-</script>   
+</script>  
  </body>
 </html>

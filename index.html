@@ -60,11 +60,13 @@
       <li class="active treeview"> <a href="#"> <i class="fa fa-dashboard"></i> <span>Mobile Dashboard</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a> 
        <ul class="treeview-menu"> 
         <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Mobile Home</a></li> 
+        <li><a href="MobileHome_SFURL.html"><i class="fa fa-circle-o"></i> SF URL List</a></li> 
        </ul> </li> 
       <li class="treeview"> <a href="#"> <i class="fa fa-dashboard"></i> <span>MP Dashboard</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a> 
        <ul class="treeview-menu"> 
-        <!--<li><a href="MobileHome_MPHeartbeat.html"><i class="fa fa-circle-o"></i> MP Heartbeat Calendar</a></li>--> 
+        <li><a href="MobileHome_MPServiceMonitorByMonth.html"><i class="fa fa-circle-o"></i> MP Heartbeat Monitor by Month</a></li> 
         <li><a href="/mp-ut-report/index.html" target="_blank"><i class="fa fa-circle-o"></i> MP UT Status</a></li> 
+        <li><a href="https://confluence.successfactors.com/pages/viewpage.action?pageId=253382020" target="_blank"><i class="fa fa-circle-o"></i> MP UT Coverage Chart</a></li> 
         <li><a href="MobileHome_MPAPIStatus.html"><i class="fa fa-circle-o"></i> MP API Status</a></li> 
         <li><a href="MobileHome_MPAutoJob.html"><i class="fa fa-circle-o"></i> MP Automation Job</a></li> 
        </ul> </li> 
@@ -77,8 +79,11 @@
       <li class="treeview"> <a href="#"> <i class="fa fa-dashboard"></i> <span>Regression Dashboard</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a> 
        <ul class="treeview-menu"> 
         <li><a href="Page_Not_Ready.html"><i class="fa fa-circle-o"></i> (TBD) Regression Home Status</a></li> 
+        <li><a href="MobileHome_MPAPIStatus.html"><i class="fa fa-circle-o"></i> MP API Regression Status</a></li> 
         <li><a href="MobileHome_IOSRegressionStatus.html"><i class="fa fa-circle-o"></i> iOS Regression Status</a></li> 
         <li><a href="MobileHome_AndroidRegressionStatus.html"><i class="fa fa-circle-o"></i> Android Regression Status</a></li> 
+        <li><a href="MobileHome_EndToEndPeformance.html"><i class="fa fa-circle-o"></i> Mobile E2E Peformance Status</a></li> 
+        <li><a href="MobileHome_LMSMobileStatus.html"><i class="fa fa-circle-o"></i> Mobile LMS Mobile Status</a></li> 
         <li><a href="MobileHome_MPPDStatus.html"><i class="fa fa-circle-o"></i> MP Post Deployment Status</a></li> 
        </ul> </li> 
      </ul> 
@@ -110,6 +115,16 @@
       </div> 
       <!-- ./col --> 
      </div> 
+     <div class="row"> 
+      <div id="qaautocand-heartbeat" class="col-xs-6 col-md-6"> 
+       <!-- small box --> 
+      </div> 
+      <!-- ./col --> 
+      <div id="qapatch-heartbeat" class="col-xs-6 col-md-6"> 
+       <!-- small box --> 
+      </div> 
+      <!-- ./col --> 
+     </div> 
      <!-- /.row --> 
      <div class="row"> 
       <div class="col-xs-12"> 
@@ -117,10 +132,10 @@
        <div class="box box-primary"> 
         <div class="box-header with-border"> 
          <i class="fa fa-bar-chart-o"></i> 
-         <h3 class="box-title">MP API Status</h3> 
-         <a href="MobileHome_MPAPIStatus.html" class="small-box-footer">Details info <i class="fa fa-arrow-circle-right"></i></a> 
+         <h3 class="box-title">MP API Sanity Status - <span style="color: red;">TBD</span></h3> 
+         <!-- <a href="MobileHome_MPAPIStatus.html" class="small-box-footer">Details info <i class="fa fa-arrow-circle-right"></i></a>  --> 
         </div> 
-        <div class="box-body"> 
+        <!-- <div class="box-body"> 
          <div class="row"> 
           <div class="col-xs-6 col-md-6 text-center"> 
            <div id="donut-chart-preview-overall" style="height: 300px;"></div> 
@@ -135,7 +150,7 @@
            </div> 
           </div> 
          </div> 
-        </div> 
+        </div>  --> 
         <!-- /.box-body--> 
        </div> 
        <!-- /.box --> 
@@ -307,196 +322,196 @@
   <script src="bower_components/datatables.net/js/jquery.dataTables.min.js"></script> 
   <script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script> 
   <script>    
-    function loadData1(donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2) {
-            // $(tableId).empty();
-            // $(teamFMapId).empty();
-            // $(ownerFMapId).empty();
-            // $(failureChatId).empty();
-            // $(tableId).append(table_header_html);
-            $.getJSON(dataJsonFile, function(json) {
-                var data = json;
-                var html = '';
-                var totalpass = 0;
-                var totalfail = 0;
-                var totalskip = 0;
-                var count = 0;
-                var teamFailMap = new Map();
-                var ownerFailMap = new Map();
-                var featureFailMap = new Map();
-                var mpBranchInfoList = "";
-                data.forEach(function(file, i) {
-                    $.getJSON(file, function(fdata) {
-                        var jobname = fdata.job_name;
-                        var lens = jobname.length - featureNameFilter1.length - featureNameFilter2.length;
-                        var featureName = jobname.substr(featureNameFilter1.length, lens);
-                        var passrate = fdata.pass_rate.substr(0, fdata.pass_rate.length - 1);
-                        var team = fdata.team;
-                        var owner = fdata.owner;
-                        var comment = fdata.hasOwnProperty("comment") ? fdata.comment : "";
-                        var executionAt = fdata.execution_start_time;
-                        var executionDuration = fdata.execution_duration;
-                        var saveCommentId = 'id_' + jobname + '_input';
-                        var jobUniqueId = fdata.job_run_unique_id;
-                        var branchInfo = (fdata.client_build_branch === "") ? "" : (fdata.client_build_branch + " " + fdata.client_build_version);
-                        var jobLogLink = fdata.log_link;
-                        var rerunJobLink = "";
-                        var jobLink = "";
-                        if (jobLogLink !== "") {
-                            jobLink = jobLogLink.substr(0, jobLogLink.lastIndexOf("/"));
-                            jobLink = jobLink.substr(0, jobLink.lastIndexOf("/"));
-                            rerunJobLink = jobLink + "/build";
-                        }
-                        // html = '<tr>' +
-                        //     '<td>' + team + '</td>' +
-                        //     '<td>' + featureName + '</td>' +
-                        //     '<td><div class="progress progress-xs"><div class="progress-bar progress-bar-success" style="width: ' + passrate + '%"></div></div></td>' +
-                        //     '<td><span class="badge bg-' + (passrate == 100 ? "green" : (passrate > 90 ? "yellow" : "red")) + '">' + passrate + '%</td>' +
-                        //     '<td>' + (parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count)) + '/' + (parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count) + parseInt(fdata.pass_case_count)) + '</td>' +
-                        //     '<td>' + executionAt + '</td>' +
-                        //     '<td>' + executionDuration + '</td>' +
-                        //     '<td><input id="' + saveCommentId + '" type="text" value="' + comment + '" class="form-control"></td>' +
-                        //     '<td><input id="' + (saveCommentId + '_button') + '" type="button" value="save" onclick="saveComment(\'' + file + '\',\'' + saveCommentId + '\',\'' + jobUniqueId + '\',\'comment\')"></td>' +
-                        //     '<td><a href="MobileHome_TestDetails.html?detailpath=' + file + '" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i></a></td>' +
-                        //     (rerunJobLink == "" ? '<td></td>' : (passrate == 100 ? ('<td><a href="' + jobLink + '" title="View Job - build #' + jobUniqueId + '" class="small-box-footer">View Job</a></td>') : ('<td><a href="' + rerunJobLink + '" title="Click to redirect to Jenkins build job page.\t\n[Server] - Select correct env info(qacand/qapatchpreview)\n[RunType] - Select reRun\n[reRunForId] - Input the build number: ' + jobUniqueId + '\n[MailTo] - Input correct email address\nClick Build button to launch the job" class="small-box-footer">Rerun for build# ' + jobUniqueId + '</a></td>'))) +
-                        //     '</tr>';
+    // function loadData1(donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2) {
+    //         // $(tableId).empty();
+    //         // $(teamFMapId).empty();
+    //         // $(ownerFMapId).empty();
+    //         // $(failureChatId).empty();
+    //         // $(tableId).append(table_header_html);
+    //         $.getJSON(dataJsonFile, function(json) {
+    //             var data = json;
+    //             var html = '';
+    //             var totalpass = 0;
+    //             var totalfail = 0;
+    //             var totalskip = 0;
+    //             var count = 0;
+    //             var teamFailMap = new Map();
+    //             var ownerFailMap = new Map();
+    //             var featureFailMap = new Map();
+    //             var mpBranchInfoList = "";
+    //             data.forEach(function(file, i) {
+    //                 $.getJSON(file, function(fdata) {
+    //                     var jobname = fdata.job_name;
+    //                     var lens = jobname.length - featureNameFilter1.length - featureNameFilter2.length;
+    //                     var featureName = jobname.substr(featureNameFilter1.length, lens);
+    //                     var passrate = fdata.pass_rate.substr(0, fdata.pass_rate.length - 1);
+    //                     var team = fdata.team;
+    //                     var owner = fdata.owner;
+    //                     var comment = fdata.hasOwnProperty("comment") ? fdata.comment : "";
+    //                     var executionAt = fdata.execution_start_time;
+    //                     var executionDuration = fdata.execution_duration;
+    //                     var saveCommentId = 'id_' + jobname + '_input';
+    //                     var jobUniqueId = fdata.job_run_unique_id;
+    //                     var branchInfo = (fdata.client_build_branch === "") ? "" : (fdata.client_build_branch + " " + fdata.client_build_version);
+    //                     var jobLogLink = fdata.log_link;
+    //                     var rerunJobLink = "";
+    //                     var jobLink = "";
+    //                     if (jobLogLink !== "") {
+    //                         jobLink = jobLogLink.substr(0, jobLogLink.lastIndexOf("/"));
+    //                         jobLink = jobLink.substr(0, jobLink.lastIndexOf("/"));
+    //                         rerunJobLink = jobLink + "/build";
+    //                     }
+    //                     // html = '<tr>' +
+    //                     //     '<td>' + team + '</td>' +
+    //                     //     '<td>' + featureName + '</td>' +
+    //                     //     '<td><div class="progress progress-xs"><div class="progress-bar progress-bar-success" style="width: ' + passrate + '%"></div></div></td>' +
+    //                     //     '<td><span class="badge bg-' + (passrate == 100 ? "green" : (passrate > 90 ? "yellow" : "red")) + '">' + passrate + '%</td>' +
+    //                     //     '<td>' + (parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count)) + '/' + (parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count) + parseInt(fdata.pass_case_count)) + '</td>' +
+    //                     //     '<td>' + executionAt + '</td>' +
+    //                     //     '<td>' + executionDuration + '</td>' +
+    //                     //     '<td><input id="' + saveCommentId + '" type="text" value="' + comment + '" class="form-control"></td>' +
+    //                     //     '<td><input id="' + (saveCommentId + '_button') + '" type="button" value="save" onclick="saveComment(\'' + file + '\',\'' + saveCommentId + '\',\'' + jobUniqueId + '\',\'comment\')"></td>' +
+    //                     //     '<td><a href="MobileHome_TestDetails.html?detailpath=' + file + '" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i></a></td>' +
+    //                     //     (rerunJobLink == "" ? '<td></td>' : (passrate == 100 ? ('<td><a href="' + jobLink + '" title="View Job - build #' + jobUniqueId + '" class="small-box-footer">View Job</a></td>') : ('<td><a href="' + rerunJobLink + '" title="Click to redirect to Jenkins build job page.\t\n[Server] - Select correct env info(qacand/qapatchpreview)\n[RunType] - Select reRun\n[reRunForId] - Input the build number: ' + jobUniqueId + '\n[MailTo] - Input correct email address\nClick Build button to launch the job" class="small-box-footer">Rerun for build# ' + jobUniqueId + '</a></td>'))) +
+    //                     //     '</tr>';
 
-                        // $(tableId).append(html);
-                        count += 1;
-                        totalpass += parseInt(fdata.pass_case_count);
-                        totalfail += parseInt(fdata.fail_case_count);
-                        totalskip += parseInt(fdata.skip_case_count);
-                        //for team failures map
-                        var teamFcount = 0;
-                        if (teamFailMap.has(team)) {
-                            teamFcount = teamFailMap.get(team);
-                        }
-                        if (parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count) > 0) {
-                            teamFcount = teamFcount + parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count);
-                            teamFailMap.set(team, teamFcount);
-                        }
-                        //for owner failures map
-                        var ownerFcount = 0;
-                        if (ownerFailMap.has(owner)) {
-                            ownerFcount = ownerFailMap.get(owner);
-                        }
-                        if (parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count) > 0) {
-                            ownerFcount = ownerFcount + parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count);
-                            ownerFailMap.set(owner, ownerFcount);
-                            featureFailMap.set(featureName, parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count));
-                        }
-                        //branch info
-                        if (branchInfo != null && branchInfo !== "" && !mpBranchInfoList.includes(branchInfo)) {
-                            mpBranchInfoList = (mpBranchInfoList === "") ? branchInfo : (mpBranchInfoList + "," + branchInfo);
-                        }
-                        if (count === data.length) {
-                            /*
-                             * DONUT CHART - overall
-                             * -----------
-                             */
-                            addOverallData(totalpass, totalfail, totalskip, donutChatId, teamFailMap, ownerFailMap, teamFMapId, ownerFMapId, featureFailMap, mpBranchInfoList, failureChatId);
+    //                     // $(tableId).append(html);
+    //                     count += 1;
+    //                     totalpass += parseInt(fdata.pass_case_count);
+    //                     totalfail += parseInt(fdata.fail_case_count);
+    //                     totalskip += parseInt(fdata.skip_case_count);
+    //                     //for team failures map
+    //                     var teamFcount = 0;
+    //                     if (teamFailMap.has(team)) {
+    //                         teamFcount = teamFailMap.get(team);
+    //                     }
+    //                     if (parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count) > 0) {
+    //                         teamFcount = teamFcount + parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count);
+    //                         teamFailMap.set(team, teamFcount);
+    //                     }
+    //                     //for owner failures map
+    //                     var ownerFcount = 0;
+    //                     if (ownerFailMap.has(owner)) {
+    //                         ownerFcount = ownerFailMap.get(owner);
+    //                     }
+    //                     if (parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count) > 0) {
+    //                         ownerFcount = ownerFcount + parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count);
+    //                         ownerFailMap.set(owner, ownerFcount);
+    //                         featureFailMap.set(featureName, parseInt(fdata.fail_case_count) + parseInt(fdata.skip_case_count));
+    //                     }
+    //                     //branch info
+    //                     if (branchInfo != null && branchInfo !== "" && !mpBranchInfoList.includes(branchInfo)) {
+    //                         mpBranchInfoList = (mpBranchInfoList === "") ? branchInfo : (mpBranchInfoList + "," + branchInfo);
+    //                     }
+    //                     if (count === data.length) {
+    //                         /*
+    //                          * DONUT CHART - overall
+    //                          * -----------
+    //                          */
+    //                         addOverallData(totalpass, totalfail, totalskip, donutChatId, teamFailMap, ownerFailMap, teamFMapId, ownerFMapId, featureFailMap, mpBranchInfoList, failureChatId);
 
-                        }
+    //                     }
                         
-                    }).fail(function(jqXHR) {
-                        if (jqXHR.status == 404) {
-                            //alert("404 Not Found");
-                            count++;
-                            if (count === data.length) {
-                                /*
-                                 * DONUT CHART - overall
-                                 * -----------
-                                 */
-                                addOverallData(totalpass, totalfail, totalskip, donutChatId, teamFailMap, ownerFailMap, teamFMapId, ownerFMapId, featureFailMap, mpBranchInfoList, failureChatId);
+    //                 }).fail(function(jqXHR) {
+    //                     if (jqXHR.status == 404) {
+    //                         //alert("404 Not Found");
+    //                         count++;
+    //                         if (count === data.length) {
+    //                             /*
+    //                              * DONUT CHART - overall
+    //                              * -----------
+    //                              */
+    //                             addOverallData(totalpass, totalfail, totalskip, donutChatId, teamFailMap, ownerFailMap, teamFMapId, ownerFMapId, featureFailMap, mpBranchInfoList, failureChatId);
 
-                            }
-                        }
-                    });
-                });
+    //                         }
+    //                     }
+    //                 });
+    //             });
 
-            });
+    //         });
 
-        }
+    //     }
 
-        function addOverallData(totalpass, totalfail, totalskip, donutChatId, teamFailMap, ownerFailMap, teamFMapId, ownerFMapId, featureFailMap, mpBranchInfoList, failureChatId) {
-            var donutData = [{
-                    label: 'Pass',
-                    data: totalpass,
-                    color: '#00a65a'
-                }, {
-                    label: 'Fail',
-                    data: (totalfail + totalskip),
-                    color: '#f56954'
-                }
-                // { label: 'skip', data: totalskip, color: '#f39c12' }
-            ]
-            $.plot(donutChatId, donutData, {
-                    series: {
-                        pie: {
-                            show: true,
-                            radius: 1,
-                            innerRadius: 0.5,
-                            label: {
-                                show: true,
-                                radius: 2 / 3,
-                                formatter: labelFormatter,
-                                threshold: 0.1
-                            }
+    //     function addOverallData(totalpass, totalfail, totalskip, donutChatId, teamFailMap, ownerFailMap, teamFMapId, ownerFMapId, featureFailMap, mpBranchInfoList, failureChatId) {
+    //         var donutData = [{
+    //                 label: 'Pass',
+    //                 data: totalpass,
+    //                 color: '#00a65a'
+    //             }, {
+    //                 label: 'Fail',
+    //                 data: (totalfail + totalskip),
+    //                 color: '#f56954'
+    //             }
+    //             // { label: 'skip', data: totalskip, color: '#f39c12' }
+    //         ]
+    //         $.plot(donutChatId, donutData, {
+    //                 series: {
+    //                     pie: {
+    //                         show: true,
+    //                         radius: 1,
+    //                         innerRadius: 0.5,
+    //                         label: {
+    //                             show: true,
+    //                             radius: 2 / 3,
+    //                             formatter: labelFormatter,
+    //                             threshold: 0.1
+    //                         }
 
-                        }
-                    },
-                    legend: {
-                        show: true
-                    }
-                })
-                /*
-                 * END DONUT CHART
-                 */
+    //                     }
+    //                 },
+    //                 legend: {
+    //                     show: true
+    //                 }
+    //             })
+    //             /*
+    //              * END DONUT CHART
+    //              */
 
-            // /**
-            //  * Failure by Team
-            //  */
-            // teamFailMap.forEach(function(value, key, teamFailMap) {
-            //     html = '<tr>' +
-            //         '<td>' + key + '</td>' +
-            //         '<td>' + value + '</td>' +
-            //         '</tr>';
+    //         // /**
+    //         //  * Failure by Team
+    //         //  */
+    //         // teamFailMap.forEach(function(value, key, teamFailMap) {
+    //         //     html = '<tr>' +
+    //         //         '<td>' + key + '</td>' +
+    //         //         '<td>' + value + '</td>' +
+    //         //         '</tr>';
 
-            //     $(teamFMapId).append(html);
-            // });
+    //         //     $(teamFMapId).append(html);
+    //         // });
 
-            // /**
-            //  * Failure by Owner
-            //  */
-            // ownerFailMap.forEach(function(value, key, ownerFailMap) {
-            //     html = '<tr>' +
-            //         '<td>' + key + '</td>' +
-            //         '<td>' + value + '</td>' +
-            //         '</tr>';
+    //         // /**
+    //         //  * Failure by Owner
+    //         //  */
+    //         // ownerFailMap.forEach(function(value, key, ownerFailMap) {
+    //         //     html = '<tr>' +
+    //         //         '<td>' + key + '</td>' +
+    //         //         '<td>' + value + '</td>' +
+    //         //         '</tr>';
 
-            //     $(ownerFMapId).append(html);
-            // });
+    //         //     $(ownerFMapId).append(html);
+    //         // });
 
-            /*
-             * Custom Label formatter
-             * ----------------------
-             */
-            function labelFormatter(label, series) {
-                return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">' + label + '<br>'
-                    // + Math.round(series.percent) + '%</div>'
-                    + series.percent.toFixed(2) + '%</div>'
-            }
-            /*
-             * get failures by feature
-             */
-            var featureFailure = "<div><b>Failures</b>: ";
-            featureFailMap.forEach(function(value, key, featureFailMap) {
-                featureFailure = featureFailure.indexOf(")") > 0 ? featureFailure + "," + key + "(" + value + ")" : featureFailure + key + "(" + value + ")";
+    //         /*
+    //          * Custom Label formatter
+    //          * ----------------------
+    //          */
+    //         function labelFormatter(label, series) {
+    //             return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">' + label + '<br>'
+    //                 // + Math.round(series.percent) + '%</div>'
+    //                 + series.percent.toFixed(2) + '%</div>'
+    //         }
+    //         /*
+    //          * get failures by feature
+    //          */
+    //         var featureFailure = "<div><b>Failures</b>: ";
+    //         featureFailMap.forEach(function(value, key, featureFailMap) {
+    //             featureFailure = featureFailure.indexOf(")") > 0 ? featureFailure + "," + key + "(" + value + ")" : featureFailure + key + "(" + value + ")";
 
-            });
-            featureFailure = featureFailure + "</div>";
-            var mpBranchInfoString = featureFailure + "<div><b>Branch_Commit</b>: " + mpBranchInfoList + "</div>";
-            $(failureChatId).append(mpBranchInfoString);
-        }
+    //         });
+    //         featureFailure = featureFailure + "</div>";
+    //         var mpBranchInfoString = featureFailure + "<div><b>Branch_Commit</b>: " + mpBranchInfoList + "</div>";
+    //         $(failureChatId).append(mpBranchInfoString);
+    //     }
 
 
     function loadData3(latestDateFile,dataJsonFile) {
@@ -506,7 +521,7 @@
 
         $.getJSON(dataJsonFile, function(json) {
             var data = json;
-            var html = '';
+            
             var failForDayRule = 2;
             var dayResultMap = new Map();
             data.forEach(function (file, i) {
@@ -538,19 +553,40 @@
                             dlen ++;
 
                             if (len === dlen) {//latest data
-                                var serverLabel = server.includes("preview")?"QAPATCHPREVIWE":(server.includes("qacand")?"QACAND":server);
+                                var serverLabel = "";
+                                //server.includes("preview")?"QAPATCHPREVIEW":(server.includes("qacand")?"QACAND":server);
+                                var mpHearbeatUrl = "";
+                                var html = "";
+                                
+                                if (server.includes("preview")) {
+                                    serverLabel = "QAPATCHPREVIEW";
+                                    mpHearbeatUrl = "https://mobileqapatchpreview.lab-rot.ondemand.com/heartbeat";
+                                } else if(server.includes("qacand")) {
+                                    serverLabel = "QACAND";
+                                    mpHearbeatUrl = "https://mobileqacand.lab-rot.ondemand.com/heartbeat";
+                                } else if(server.includes("qaautocand")) {
+                                    serverLabel = "QAAUTOCAND";
+                                    mpHearbeatUrl = "https://mobileqaautocand.lab-rot.ondemand.com/heartbeat";
+                                } else if(server.includes("qapatch")) {
+                                    serverLabel = "QAPATCH";
+                                    mpHearbeatUrl = "https://mobileqapatch.lab-rot.ondemand.com/heartbeat";
+                                }
                                 html = '<div class="small-box bg-' + (status === "Alive"?'green':(status.indexOf("Down")>=0?'red':'aqua')) + '">' +
                                     '<div class="inner">' +
                                     '<h3>' + (serverLabel) + '<small> - ' + status + '</small></h3>' +
                                     '<p>' + checkingAt + '</p>' +
                                     '</div>' +
                                     '<a href="MobileHome_MPHeartbeatDetails.html?detailpath=' + file + '" class="small-box-footer" target="_blank">Get status by days <i class="fa fa-arrow-circle-right"></i></a>' +
-                                    '<a href="https://mobileqapatchpreview.lab-rot.ondemand.com/heartbeat" class="small-box-footer" target="_blank">Check RunTime Deployment Info <i class="fa fa-arrow-circle-right"></i></a>' +
+                                    '<a href="'+mpHearbeatUrl+'" class="small-box-footer" target="_blank">Check RunTime Deployment Info <i class="fa fa-arrow-circle-right"></i></a>' +
                                     '</div>';
-                                if(serverLabel === "QAPATCHPREVIWE")
+                                if(serverLabel === "QAPATCHPREVIEW")
                                     $('#preview-heartbeat').append(html);
                                 if(serverLabel === "QACAND")
                                     $('#qacand-heartbeat').append(html);
+                                if(serverLabel === "QAAUTOCAND")
+                                    $('#qaautocand-heartbeat').append(html);
+                                if(serverLabel === "QAPATCH")
+                                    $('#qapatch-heartbeat').append(html);
                                 mln++;
 
                             }
@@ -575,34 +611,34 @@
 
         loadData3(latestDateFile,dataJsonFile);
 
-        //load qapatchpreview API auto data
-        tableId = "#table_preview";
-        donutChatId = "#donut-chart-preview-overall";
-        teamFMapId = "#donut-chart-preview-byteam";
-        ownerFMapId = "#donut-chart-preview-byowner";
-        failureChatId = "#donut-chart-preview-overall-failures";
-        dataJsonFile = "MP_Daily_API_Job_qapatchpreview_conf.json";
-        featureNameFilter1 = "MPAPI-Feature-Test-";
-        featureNameFilter2 = "-qapatchpreview";
+        // //load qapatchpreview API auto data
+        // tableId = "#table_preview";
+        // donutChatId = "#donut-chart-preview-overall";
+        // teamFMapId = "#donut-chart-preview-byteam";
+        // ownerFMapId = "#donut-chart-preview-byowner";
+        // failureChatId = "#donut-chart-preview-overall-failures";
+        // dataJsonFile = "MP_Daily_API_Job_qapatchpreview_conf.json";
+        // featureNameFilter1 = "MPAPI-Feature-Test-";
+        // featureNameFilter2 = "-qapatchpreview";
         
-        loadData1(donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2);
+        // loadData1(donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2);
 
-        //load qacand API auto data
-        tableId = "#table_qacand";
-        donutChatId = "#donut-chart-qacand-overall";
-        teamFMapId = "#donut-chart-qacand-byteam";
-        ownerFMapId = "#donut-chart-qacand-byowner";
-        failureChatId = "#donut-chart-qacand-overall-failures";
-        dataJsonFile = "MP_Daily_API_Job_qacand_conf.json";
-        featureNameFilter1 = "MPAPI-Feature-Test-";
-        featureNameFilter2 = "-qacand";
+        // //load qacand API auto data
+        // tableId = "#table_qacand";
+        // donutChatId = "#donut-chart-qacand-overall";
+        // teamFMapId = "#donut-chart-qacand-byteam";
+        // ownerFMapId = "#donut-chart-qacand-byowner";
+        // failureChatId = "#donut-chart-qacand-overall-failures";
+        // dataJsonFile = "MP_Daily_API_Job_qacand_conf.json";
+        // featureNameFilter1 = "MPAPI-Feature-Test-";
+        // featureNameFilter2 = "-qacand";
         
-        loadData1(donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2);
+        // loadData1(donutChatId, teamFMapId, ownerFMapId, failureChatId, dataJsonFile, featureNameFilter1, featureNameFilter2);
             
 
     }
 
     $(document).ready(loadData());
-</script>   
+</script>  
  </body>
 </html>

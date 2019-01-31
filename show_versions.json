@@ -1,5 +1,5 @@
-{"default":"release1810",
-"mob": ["release1809","release1811","release1812"],
-"bizx": ["bizx1808Preview","bizx1808Production"],
-"other":"debug"
+{"default":"release1902",
+"mob": ["release1902","release1812p1","release1812","release1811","release1810","release1809"],
+"bizx": ["bizx1902Preview","bizx1902Production","bizx1811Preview","bizx1811Production","bizx1808Preview","bizx1808Production"],
+"other": ["debug","NA","1902Performance4","1902Performance3","1902Performance2","Mob27402_Soar_20190114","Jing_companyId_20190111","jing-bizxcompanyid-0111","Mob27360_forSoar","Jing_companyId_20190107NA","Jing_companyId_20190107","wendyDebug","TestForSoar_","CompanyIdForJing_"]
 }
